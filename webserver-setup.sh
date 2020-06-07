@@ -1,4 +1,6 @@
 #!/bin/bash
+##
+#
 # apt update ; apt upgrade -y ; curl -4 -o /root/go.sh https://www.flashtek-uk.com/go.txt ; chmod +x /root/go.sh
 
 echo "##############################################"
