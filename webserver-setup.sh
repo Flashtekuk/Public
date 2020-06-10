@@ -1,7 +1,7 @@
 #!/bin/bash
 ##
 #
-# apt update ; apt upgrade -y ; curl -4 -o /root/go.sh https://www.flashtek-uk.com/go.txt ; chmod +x /root/go.sh
+# apt update ; apt upgrade -y ; curl -4 -o /root/webserver-setup.sh https://github.com/Flashtekuk/Public/blob/master/webserver-setup.sh; chmod +x /root/webserver-setup.sh
 
 echo "##############################################"
 echo ""
@@ -52,19 +52,6 @@ SITE_FILES="${WEB_ROOT}/sites/default/files"
 SITE_DB="sitedb"
 SITE_DB_USER="sitedbuser"
 SITE_DB_PASS="$(pwgen -cnsB 10 1)"
-
-##
-# My personal customisations
-#
-echo "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJd2lcSaoR2rpBhonj08A5ouX0EaoIqhzuHcD8rc7TjMHh8qHtCO20mfVl73AXUNGg2hNSDzhMeWHvSGf5au2/4= neil@threadripper" >> /root/.ssh/authorized_keys
-
-groupadd wheel
-gpasswd -a neil wheel
-
-sed -i.bak -e 's/# auth       sufficient pam_wheel.so trust/auth       sufficient pam_wheel.so trust/g' /etc/pam.d/su
-#
-# End of my personal customisations
-##
 
 ##
 # Install php uploadprogress plugin
