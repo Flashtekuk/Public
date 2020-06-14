@@ -45,7 +45,7 @@ fi
 #
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php-dom \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot \
-		python-certbot-apache php-apcu php-curl
+		python-certbot-apache php-apcu php-curl libphp-phpmailer
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WEB_ROOT="/var/www/html"
@@ -171,9 +171,10 @@ tar xf tar.gz
 mv drupal-* html
 
 ##
-# Set ownership of DocumentRoot files
+# Set ownership ahd group write of DocumentRoot files
 #
 chown -R www-data:www-data ${WEB_ROOT}
+chmod -R g+wr ${WEB_ROOT}
 
 ##
 # Install composer
