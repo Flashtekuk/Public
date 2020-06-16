@@ -1,7 +1,7 @@
 #!/bin/bash
 ##
 #
-# apt update ; apt upgrade -y ; curl -4 -o /root/webserver-setup.sh https://github.com/Flashtekuk/Public/blob/master/webserver-setup.sh; chmod +x /root/webserver-setup.sh
+# apt update ; apt upgrade -y ; curl -4 -o /root/webserver-setup.sh https://raw.githubusercontent.com/Flashtekuk/Public/master/webserver-setup.sh ; chmod +x /root/webserver-setup.sh
 
 echo "##############################################"
 echo ""
