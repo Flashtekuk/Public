@@ -45,7 +45,7 @@ fi
 #
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php-dom \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot \
-		python-certbot-apache php-apcu php-curl libphp-phpmailer
+		python-certbot-apache php-apcu php-curl libphp-phpmailer imagick
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WEB_ROOT="/var/www/html"
