@@ -6,7 +6,7 @@
 ##
 # Install packages
 #
-apt install -y screen rsync htop curl
+apt install -y screen rsync htop curl qemu-guest-agent
 
 ##
 # My personal customisations
