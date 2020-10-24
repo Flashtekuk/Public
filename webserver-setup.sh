@@ -10,8 +10,8 @@ echo ""
 read -s -p "Input MySQL root password: " MYSQL_PASS
 echo ""
 echo ""
-read -p "Enter email address for letsencrypt: " EMAIL_ADDRESS
-echo ""
+#read -p "Enter email address for letsencrypt: " EMAIL_ADDRESS
+#echo ""
 echo ""
 echo "##############################################"
 
