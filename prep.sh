@@ -5,6 +5,11 @@
 
 
 ##
+# Install packages
+#
+apt install -y screen rsync htop curl
+
+##
 # My personal customisations
 #
 mkdir -p /root/.ssh -m 0600
