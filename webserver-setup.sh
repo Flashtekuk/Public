@@ -48,6 +48,7 @@ apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-g
 		python-certbot-apache php-apcu php-curl libphp-phpmailer imagick
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
+WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"
 WEB_ROOT="/var/www/html"
 SITE_FILES="${WEB_ROOT}/sites/default/files"
 
