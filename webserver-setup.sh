@@ -9,6 +9,7 @@ read -p "Enter desired hostname: " SITE_NAME
 echo ""
 read -s -p "Input MySQL root password: " MYSQL_PASS
 echo ""
+echo ""
 read -p "Enter email address for letsencrypt: " EMAIL_ADDRESS
 echo ""
 echo ""
@@ -35,17 +36,17 @@ REAL_IP="$(dig +short ${SITE_NAME})"
 ##
 # Sanity check that the DNS record for ${SITE} matched the public IP for this system
 #
-if [ ${MY_IP} != ${REAL_IP} ]; then
-	echo "DNS vs IP mismatch: ${MY_IP} != ${REAL_IP}"
-	exit 69
-fi
+#if [ ${MY_IP} != ${REAL_IP} ]; then
+#	echo "DNS vs IP mismatch: ${MY_IP} != ${REAL_IP}"
+#	exit 69
+#fi
 
 ##
 # Install required packages
 #
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php-dom \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot \
-		python-certbot-apache php-apcu php-curl libphp-phpmailer imagick
+		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"
@@ -66,7 +67,7 @@ phpenmod uploadprogress
 ##
 # Generate SSL certificate
 #
-certbot --apache -n -m ${EMAIL_ADDRESS} --agree-tos --keep -d ${SITE_NAME}
+#certbot --apache -n -m ${EMAIL_ADDRESS} --agree-tos --keep -d ${SITE_NAME}
 # --test
 
 ##
@@ -127,7 +128,7 @@ a2enconf mysite
 a2enmod rewrite
 a2enmod headers
 a2enmod remoteip
-a2enmod ssl
+#a2enmod ssl
 # Might want this at a later point
 #a2enmod http2
 
