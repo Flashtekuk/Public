@@ -6,7 +6,7 @@
 ##
 # Install packages
 #
-apt install -y screen rsync htop curl qemu-guest-agent
+apt install -y screen rsync htop curl qemu-guest-agent xinetd
 
 ##
 # My personal customisations
@@ -21,6 +21,35 @@ gpasswd -a neil wheel
 sed -i.bak -e 's/# auth       sufficient pam_wheel.so trust/auth       sufficient pam_wheel.so trust/g' /etc/pam.d/su
 
 echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;36m\]\h \[\033[01;33m\]\w \[\033[01;35m\]\$ \[\033[00m\]'" >> /root/.bashrc
+
+cat << EOF > /etc/xinetd.d/lb-feedback
+# default: on
+# description: lb-feedback socket server
+service lb-feedback
+{
+   port            = 3333
+   socket_type     = stream
+   flags           = REUSE
+   wait            = no
+   user            = nobody
+   server          = /usr/bin/lb-feedback.sh
+   log_on_success  += USERID
+   log_on_failure  += USERID
+   disable         = no
+}
+EOF
+
+cat << EOF > /usr/bin/lb-feedback.sh
+#!/bin/bash
+LOAD=\`/usr/bin/vmstat 1 2| /usr/bin/tail -1| /usr/bin/awk '{print \$15;}' | /usr/bin/tee\`
+echo "\${LOAD}%"
+#This outputs a 1 second average CPU idle
+EOF
+chmod +x /usr/bin/lb-feedback.sh
+
+echo "lb-feedback 3333/tcp # Loadbalancer.org feedback daemon" >> /etc/services
+
+service xinetd restart
 
 #
 # End of my personal customisations
