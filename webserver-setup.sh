@@ -91,12 +91,14 @@ cat << EOF > /etc/apache2/sites-available/ssl-site.conf
 		ServerAdmin webmaster@localhost
 		DocumentRoot /var/www/html
 
-		ErrorLog ${APACHE_LOG_DIR}/error.log
-		CustomLog ${APACHE_LOG_DIR}/access.log combined
+		ErrorLog /var/log/apache2/ssl-error.log
+		CustomLog /var/log/apache2/ssl-access.log combined
 
-		SSLCertificateFile /etc/letsencrypt/live/${SITE_NAME}/fullchain.pem
-		SSLCertificateKeyFile /etc/letsencrypt/live/${SITE_NAME}/privkey.pem
-		Include /etc/letsencrypt/options-ssl-apache.conf
+#		SSLCertificateFile /etc/letsencrypt/live/${SITE_NAME}/fullchain.pem
+#		SSLCertificateKeyFile /etc/letsencrypt/live/${SITE_NAME}/privkey.pem
+#		Include /etc/letsencrypt/options-ssl-apache.conf
+		SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+		SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
 
 		<FilesMatch "\.(cgi|shtml|phtml|php)$">
 			SSLOptions +StdEnvVars
@@ -128,7 +130,7 @@ a2enconf mysite
 a2enmod rewrite
 a2enmod headers
 a2enmod remoteip
-#a2enmod ssl
+a2enmod ssl
 # Might want this at a later point
 #a2enmod http2
 
@@ -239,3 +241,5 @@ fi
 # Bring Apache2 back up so we can access WebUI...
 #
 systemctl start apache2
+
+echo "All done..."
