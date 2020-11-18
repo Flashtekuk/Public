@@ -22,9 +22,20 @@ if [ $# -gt 0 ]; then
 fi
 
 ##
+# Install latest PHP repo
+#
+apt -y install lsb-release apt-transport-https ca-certificates
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+
+##
 # Update and upgrade everything
 #
 apt update ; apt upgrade -y
+
+##
+# Packages required for sanity check
+#
 apt install -y dnsutils
 
 ##
@@ -45,7 +56,7 @@ REAL_IP="$(dig +short ${SITE_NAME})"
 # Install required packages
 #
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php-dom \
-		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot \
+		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml \
 		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick php-imagick
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
@@ -227,13 +238,15 @@ echo "drush sset system.maintenance_mode 1"
 echo "drush cr"
 echo "drush sset system.maintenance_mode 0"
 echo ""
-echo "Enjoy :-)"
-echo ""
-echo "You should now configure the site via https://${SITE_NAME}"
-echo "and the following credentials;"
-echo ""
-cat /root/site_details.txt
-echo ""
+
+elif [ ${INSTALL} == WP ]; then
+	cd ${WEB_ROOT}
+	wget ${WP_URL}
+	tar xf latest-en_GB.tar.gz
+	echo "=== Additional config needed ==="
+	echo "site config stuff for apache2 needed"
+	echo "=== Additional config needed ==="
+fi
 
 fi
 
@@ -242,4 +255,11 @@ fi
 #
 systemctl start apache2
 
+echo "Enjoy :-)"
+echo ""
+echo "You should now configure the site via https://${SITE_NAME}"
+echo "and the following credentials;"
+echo ""
+cat /root/site_details.txt
+echo ""
 echo "All done..."
