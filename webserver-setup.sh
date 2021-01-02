@@ -55,7 +55,7 @@ REAL_IP="$(dig +short ${SITE_NAME})"
 ##
 # Install required packages
 #
-apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php-dom \
+apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php7.4-dom \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml \
 		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick php-imagick
 
@@ -85,7 +85,7 @@ phpenmod uploadprogress
 # Configure apache site settings
 #
 cat << EOF > /etc/apache2/conf-available/mysite.conf
-<Directory /var/www/html>
+<Directory ${WEB_ROOT}>
 	Options FollowSymLinks
 	AllowOverride All
 	Require all granted
@@ -96,30 +96,68 @@ cat << EOF > /etc/apache2/conf-available/mysite.conf
 </Directory>
 EOF
 
-cat << EOF > /etc/apache2/sites-available/ssl-site.conf
+#cat << EOF > /etc/apache2/sites-available/ssl-site.conf
+#<IfModule mod_ssl.c>
+#        <VirtualHost _default_:443>
+#		ServerAdmin webmaster@localhost
+#		DocumentRoot /var/www/html
+#
+#		ErrorLog /var/log/apache2/ssl-error.log
+#		CustomLog /var/log/apache2/ssl-access.log combined
+#
+##		SSLCertificateFile /etc/letsencrypt/live/${SITE_NAME}/fullchain.pem
+##		SSLCertificateKeyFile /etc/letsencrypt/live/${SITE_NAME}/privkey.pem
+##		Include /etc/letsencrypt/options-ssl-apache.conf
+#		SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+#		SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+#
+#		<FilesMatch "\.(cgi|shtml|phtml|php)$">
+#			SSLOptions +StdEnvVars
+#		</FilesMatch>
+#		<Directory /usr/lib/cgi-bin>
+#			SSLOptions +StdEnvVars
+#		</Directory>
+#	</VirtualHost>
+#</IfModule>
+#
+#EOF
+
+cat << EOF >> /etc/apache2/sites-available/mysite.conf
+<VirtualHost *:80>
+        ServerName www.mysite.com
+        ServerAlias new.mysite.com
+        ServerAlias mysite.com
+
+        ServerAdmin webmaster@mysite.com
+        DocumentRoot ${WEB_ROOT}
+
+        ErrorLog \$\{APACHE_LOG_DIR\}/mysite-error.log
+        CustomLog \$\{APACHE_LOG_DIR\}/mysite-access.log combined
+
+</VirtualHost>
+
 <IfModule mod_ssl.c>
         <VirtualHost _default_:443>
-		ServerAdmin webmaster@localhost
-		DocumentRoot /var/www/html
+               ServerAdmin webmaster@mysite.com
+               DocumentRoot ${WEB_ROOT}
 
-		ErrorLog /var/log/apache2/ssl-error.log
-		CustomLog /var/log/apache2/ssl-access.log combined
+                ErrorLog  \$\{APACHE_LOG_DIR\}/mysite-ssl-error.log
+                CustomLog \$\{APACHE_LOG_DIR\}/mysite-ssl-access.log combined
 
-#		SSLCertificateFile /etc/letsencrypt/live/${SITE_NAME}/fullchain.pem
-#		SSLCertificateKeyFile /etc/letsencrypt/live/${SITE_NAME}/privkey.pem
-#		Include /etc/letsencrypt/options-ssl-apache.conf
-		SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
-		SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+#               SSLCertificateFile /etc/letsencrypt/live/www.mysite.com/fullchain.pem
+#               SSLCertificateKeyFile /etc/letsencrypt/live/www.mysite.com/privkey.pem
+#               Include /etc/letsencrypt/options-ssl-apache.conf
+                SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
 
-		<FilesMatch "\.(cgi|shtml|phtml|php)$">
-			SSLOptions +StdEnvVars
-		</FilesMatch>
-		<Directory /usr/lib/cgi-bin>
-			SSLOptions +StdEnvVars
-		</Directory>
-	</VirtualHost>
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                        SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                        SSLOptions +StdEnvVars
+                </Directory>
+        </VirtualHost>
 </IfModule>
-
 EOF
 
 ##
@@ -132,7 +170,9 @@ sed -i.bak /etc/letsencrypt/options-ssl-apache.conf \
 ##
 # Enable custom config
 #
-a2ensite ssl-site
+#a2ensite ssl-site
+mkdir -p ${WEB_ROOT}
+a2ensite mysite
 a2enconf mysite
 
 ##
@@ -186,7 +226,7 @@ tar xf tar.gz
 mv drupal-* html
 
 ##
-# Set ownership ahd group write of DocumentRoot files
+# Set ownership and group write of DocumentRoot files
 #
 chown -R www-data:www-data ${WEB_ROOT}
 chmod -R g+wr ${WEB_ROOT}
@@ -240,9 +280,13 @@ echo "drush sset system.maintenance_mode 0"
 echo ""
 
 elif [ ${INSTALL} == WP ]; then
-	cd ${WEB_ROOT}
+	cd ${WEB_ROOT} ; cd ..
 	wget ${WP_URL}
 	tar xf latest-en_GB.tar.gz
+	mv ${WEB_ROOT} ${WEB_ROOT}-old
+	mv wordpress ${WEB_ROOT}
+	chown -R www-data:www-data ${WEB_ROOT
+	chmod -R g+wr ${WEB_ROOT}
 	echo "=== Additional config needed ==="
 	echo "site config stuff for apache2 needed"
 	echo "=== Additional config needed ==="
