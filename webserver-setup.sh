@@ -56,8 +56,9 @@ REAL_IP="$(dig +short ${SITE_NAME})"
 # Install required packages
 #
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php7.4-dom \
-		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml \
-		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick php-imagick
+		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml php-mail \
+		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx \
+		alpine
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"
@@ -72,7 +73,7 @@ SITE_DB_PASS="$(pwgen -cnsB 10 1)"
 # Install php uploadprogress plugin
 #
 pecl install uploadprogress
-echo "extension=uploadprogress.so" > /etc/php/7.3/mods-available/uploadprogress.ini
+echo "extension=uploadprogress.so" > /etc/php/7.4/mods-available/uploadprogress.ini
 phpenmod uploadprogress
 
 ##
