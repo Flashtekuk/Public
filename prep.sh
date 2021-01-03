@@ -11,7 +11,7 @@ apt install -y screen rsync htop curl qemu-guest-agent xinetd
 ##
 # My personal customisations
 #
-mkdir -p /root/.ssh -m 0600
+mkdir -p /root/.ssh -m 0700
 echo "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJd2lcSaoR2rpBhonj08A5ouX0EaoIqhzuHcD8rc7TjMHh8qHtCO20mfVl73AXUNGg2hNSDzhMeWHvSGf5au2/4= neil@threadripper" >> /root/.ssh/authorized_keys
 echo "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCcrLX1MVmzCsxz7KiHyjdICZU91hnrok5IY9E6kIoZK0Q379xiNEYuGSBCuitZcumYd41bra+hyaM/pQMBMb1A= neil@IntTest1" >> /root/.ssh/authorized_keys
 
