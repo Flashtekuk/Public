@@ -295,8 +295,6 @@ elif [ ${INSTALL} == WP ]; then
 	echo "=== Additional config needed ==="
 fi
 
-fi
-
 ##
 # Bring Apache2 back up so we can access WebUI...
 #
