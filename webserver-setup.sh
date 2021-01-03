@@ -6,6 +6,7 @@
 echo "##############################################"
 echo ""
 read -p "Enter desired hostname: " SITE_NAME
+MYSITE=$(echo ${SITE_NAME}|cut -f 1 -d\. )
 echo ""
 read -s -p "Input MySQL root password: " MYSQL_PASS
 echo ""
@@ -62,7 +63,8 @@ apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-g
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"
-WEB_ROOT="/var/www/html"
+#WEB_ROOT="/var/www/html"
+WEB_ROOT="/home/${MYSITE}/sites/${SITE_NAME}/htdocs"
 SITE_FILES="${WEB_ROOT}/sites/default/files"
 
 SITE_DB="sitedb"
@@ -85,7 +87,7 @@ phpenmod uploadprogress
 ##
 # Configure apache site settings
 #
-cat << EOF > /etc/apache2/conf-available/mysite.conf
+cat << EOF > /etc/apache2/conf-available/${MYSITE}.conf
 <Directory ${WEB_ROOT}>
 	Options FollowSymLinks
 	AllowOverride All
@@ -123,27 +125,27 @@ EOF
 #
 #EOF
 
-cat << EOF >> /etc/apache2/sites-available/mysite.conf
+cat << EOF >> /etc/apache2/sites-available/${MYSITE}.conf
 <VirtualHost *:80>
-        ServerName www.mysite.com
-        ServerAlias new.mysite.com
-        ServerAlias mysite.com
+        ServerName www.${SITE_NAME}
+        ServerAlias new.${SITE_NAME}
+        ServerAlias ${SITE_NAME}
 
-        ServerAdmin webmaster@mysite.com
+        ServerAdmin webmaster@${SITE_NAME}
         DocumentRoot ${WEB_ROOT}
 
-        ErrorLog \$\{APACHE_LOG_DIR\}/mysite-error.log
-        CustomLog \$\{APACHE_LOG_DIR\}/mysite-access.log combined
+        ErrorLog ${APACHE_LOG_DIR}/${MYSITE}-error.log
+        CustomLog ${APACHE_LOG_DIR}/${MYSITE}-access.log combined
 
 </VirtualHost>
 
 <IfModule mod_ssl.c>
         <VirtualHost _default_:443>
-               ServerAdmin webmaster@mysite.com
-               DocumentRoot ${WEB_ROOT}
+                ServerAdmin webmaster@${SITE_NAME}
+                DocumentRoot ${WEB_ROOT}
 
-                ErrorLog  \$\{APACHE_LOG_DIR\}/mysite-ssl-error.log
-                CustomLog \$\{APACHE_LOG_DIR\}/mysite-ssl-access.log combined
+                ErrorLog  ${APACHE_LOG_DIR}/${MYSITE}-ssl-error.log
+                CustomLog ${APACHE_LOG_DIR}/${MYSITE}-ssl-access.log combined
 
 #               SSLCertificateFile /etc/letsencrypt/live/www.mysite.com/fullchain.pem
 #               SSLCertificateKeyFile /etc/letsencrypt/live/www.mysite.com/privkey.pem
@@ -173,8 +175,8 @@ sed -i.bak /etc/letsencrypt/options-ssl-apache.conf \
 #
 #a2ensite ssl-site
 mkdir -p ${WEB_ROOT}
-a2ensite mysite
-a2enconf mysite
+a2ensite ${MYSITE}
+a2enconf ${MYSITE}
 
 ##
 # Enable required modules
@@ -286,7 +288,7 @@ elif [ ${INSTALL} == WP ]; then
 	tar xf latest-en_GB.tar.gz
 	mv ${WEB_ROOT} ${WEB_ROOT}-old
 	mv wordpress ${WEB_ROOT}
-	chown -R www-data:www-data ${WEB_ROOT
+	chown -R www-data:www-data ${WEB_ROOT}
 	chmod -R g+wr ${WEB_ROOT}
 	echo "=== Additional config needed ==="
 	echo "site config stuff for apache2 needed"
