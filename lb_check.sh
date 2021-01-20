@@ -44,8 +44,17 @@ echo "${HOSTNAME}:${LOCALSTATE}"
 echo '<<<lbver>>>'
 LOCALLBVER=$(cut /etc/loadbalancer.org/version.txt -f3 -d\: | cut -f 3 -d\/ | cut -f 1 -d ' ' | sed -e 's/\-/\./g' | rev | cut -d\. -f 3- | rev)
 echo "Local version is: ${LOCALLBVER}"
-UPDATESTATE=$(curl --user loadbalancer:loadbalancer -k 'https://127.0.0.1:9443/lbadmin/config/update.php?mnp=maint&submnp=msu&t=1610976392&l=e&action=online' 2>/dev/null \
- | grep -i ${LOCALLBVER} | grep "information" | sed -e 's/<[^>]*>//g')
-echo ${UPDATESTATE}
+REMOTELBVER=$(curl https://www.loadbalancer.org/support/ 2>/dev/null |grep "Latest version" | sed -e 's/<[^>]*>//g' | awk '{print $3}')
+echo "Latest version is: ${REMOTELBVER}"
+
+if [ ${LOCALLBVER} -ne ${REMOTELBVER} ]; then
+	echo "Versions not equal, upgrade available"
+else;
+	echo "Versions match"
+fi
+
+#UPDATESTATE=$(curl --user loadbalancer:loadbalancer -k 'https://127.0.0.1:9443/lbadmin/config/update.php?mnp=maint&submnp=msu&t=1610976392&l=e&action=online' 2>/dev/null \
+# | grep -i ${LOCALLBVER} | grep "information" | sed -e 's/<[^>]*>//g')
+#echo ${UPDATESTATE}
 
 #echo ""
