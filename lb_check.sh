@@ -47,9 +47,9 @@ echo "Local version is: ${LOCALLBVER}"
 REMOTELBVER=$(curl https://www.loadbalancer.org/support/ 2>/dev/null |grep "Latest version" | sed -e 's/<[^>]*>//g' | awk '{print $3}')
 echo "Latest version is: ${REMOTELBVER}"
 
-if [ ${LOCALLBVER} -ne ${REMOTELBVER} ]; then
+if [ ${LOCALLBVER} != ${REMOTELBVER} ]; then
 	echo "Versions not equal, upgrade available"
-else;
+else
 	echo "Versions match"
 fi
 
