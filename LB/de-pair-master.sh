@@ -47,6 +47,6 @@ xmlstarlet edit -O -P \
 -d config/physical/pool/node/role \
 -d config/physical/pool/node/ip \
 -d config/physical/pool/node/type \
-${CONFIG} > ${OUT}
+${CONFIG} | sed -i '/^$/d' > ${OUT}
 
 echo "Converted: ${CONFIG} to ${OUT}"

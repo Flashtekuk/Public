@@ -61,6 +61,6 @@ xmlstarlet edit -O -P \
  -d config/gslb/pools/pool \
  -d config/pbr/rule \
 \
-${CONFIG} > ${OUT}
+${CONFIG} | sed -i '/^$/d' > ${OUT}
 
 echo "Converted: ${CONFIG} to ${OUT}"
