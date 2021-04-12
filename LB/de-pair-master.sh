@@ -7,6 +7,7 @@ set -e
 # Uses 'xmlstarlet' package. Please install prior to using this script.                                         #
 #                                                                                                               #
 # v1.0 - 2021-04-12 - Neil Stone - Initial write                                                                #
+# v1.0.1 - 2021-04-12 - Neil Stone - Improve the sed                                                            #
 #                                                                                                               #
  ###############################################################################################################
 
@@ -47,6 +48,6 @@ xmlstarlet edit -O -P \
 -d config/physical/pool/node/role \
 -d config/physical/pool/node/ip \
 -d config/physical/pool/node/type \
-${CONFIG} | sed -i '/^$/d' > ${OUT}
+${CONFIG} | sed -e "/^$/d" -e "/\t$/d" > ${OUT}
 
 echo "Converted: ${CONFIG} to ${OUT}"
