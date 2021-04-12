@@ -48,12 +48,14 @@ xmlstarlet edit -O -P \
  -d config/physical/pool/node/role \
  -d config/physical/pool/node/ip \
  -d config/physical/pool/node/type \
- -u config/physical/network/role -v master \
 \
+ -u config/physical/network/role -v master \
+ -u config/physical/secure/httpscert -v localhost \
+ -d config/pound/virtual \
  -d config/haproxy/virtual \
  -d config/ldirectord/virtual \
- -d config/heartbeat/vip \
  -d config/stunnel/virtual \
+ -d config/heartbeat/vip \
  -d config/sslcerts/cert \
  -d config/waf/gateway \
  -d config/gslb/topologies/topology \

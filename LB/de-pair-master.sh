@@ -28,26 +28,26 @@ fi
 OUT=unpaired-master-${CONFIG}
 
 xmlstarlet edit -O -P \
--u config/physical/network/master -v "" \
--u config/physical/network/slave  -v "" \
+ -u config/physical/network/master -v "" \
+ -u config/physical/network/slave  -v "" \
 \
--u config/physical/pool/name -v "" \
--u config/physical/pool/state -v none \
+ -u config/physical/pool/name -v "" \
+ -u config/physical/pool/state -v none \
 \
--u config/heartbeat/ucast_interface/master -v lo \
--u config/heartbeat/ucast_interface/slave -v lo \
--u config/heartbeat/ucast_ip/master -v 127.0.0.1 \
--u config/heartbeat/ucast_ip/slave -v 127.0.0.1 \
+ -u config/heartbeat/ucast_interface/master -v lo \
+ -u config/heartbeat/ucast_interface/slave -v lo \
+ -u config/heartbeat/ucast_ip/master -v 127.0.0.1 \
+ -u config/heartbeat/ucast_ip/slave -v 127.0.0.1 \
 \
--u config/global/firewall/conntrack_size -v 524288 \
--u config/global/firewall/lockdown -v off \
--u config/global/firewall/admin_net -v 0.0.0.0/0 \
+ -u config/global/firewall/conntrack_size -v 524288 \
+ -u config/global/firewall/lockdown -v off \
+ -u config/global/firewall/admin_net -v 0.0.0.0/0 \
 \
--d config/physical/pool/node \
--d config/physical/pool/node/hostname \
--d config/physical/pool/node/role \
--d config/physical/pool/node/ip \
--d config/physical/pool/node/type \
+ -d config/physical/pool/node \
+ -d config/physical/pool/node/hostname \
+ -d config/physical/pool/node/role \
+ -d config/physical/pool/node/ip \
+ -d config/physical/pool/node/type \
 ${CONFIG} | sed -e "/^$/d" -e "/\t$/d" > ${OUT}
 
 echo "Converted: ${CONFIG} to ${OUT}"
