@@ -8,25 +8,29 @@ set -e
 #                                                                                                              #
 # v1.0 - 2021-04-12 - Neil Stone - Initial write                                                               #
 # v1.0.1 - 2021-04-12 - Neil Stone - Improve the sed                                                           #
-# v1.2.0 - 2021-05-02 - Neil Stone - Merge master and slave scripts                                            #
+# v1.2.0 - 2021-05-04 - Neil Stone - Merge master and slave scripts                                            #
 #                                                                                                              #
  ##############################################################################################################
 
 # Check xmlstarlet is installed
 which xmlstarlet &> /dev/null || echo "Binary: 'xmlstarlet' not found in path, please check this is installed and try again"
 
-if [ $# -ne 2 ]; then
-	CONFIG=lb_config.xml
-else
-	CONFIG=${2}
-fi
+CONFIG=lb_config.xml
+MODE=fail
 
-if [ ${1} = master ]; then
-	MODE=master
+while getopts :f:m: OPT
+do
+	case "${OPT}" in
+		f) CONFIG=${OPTARG};;
+		m) MODE=${OPTARG};;
+		*) MODE=fail;;
+	esac
+done
+
+if [ ${MODE} = 'master' ]; then
 	MODE_EXTRAS=''
-elif [ ${1} = slave ]; then
-	MODE=slave
-	MODE_EXTRAS=' -u config/physical/network/role -v master \
+elif [ ${MODE} = 'slave' ]; then
+	MODE_EXTRAS=" -u config/physical/network/role -v master \
 	 -u config/physical/secure/httpscert -v localhost \
 	 -d config/pound/virtual \
 	 -d config/haproxy/virtual \
@@ -39,11 +43,10 @@ elif [ ${1} = slave ]; then
 	 -d config/gslb/globalnames/globalname \
 	 -d config/gslb/members/member \
 	 -d config/gslb/pools/pool \
-	 -d config/pbr/rule'
+	 -d config/pbr/rule"
 else
-	MODE=fail
-	echo "Useage: ${0} [master|slave] filename.xml"
-	exit 6
+	echo "Useage: ${0} -m [master|slave] -f filename.xml"
+	exit 1
 fi
 
 if [ ! -f ${CONFIG} ]; then
