@@ -1,4 +1,4 @@
-# Public
+# LB
 Collection of Loadbalancer.org scripts
 
 README.md - This file
