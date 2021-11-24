@@ -5,13 +5,14 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 #
 # Health check to check function of HTTP proxy
 #
-# v1.0 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Initial creation
-# v1.1 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Improve handling of multiple site checks
+# v1.0 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Initial creation.
+# v1.1 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Improve handling of multiple site checks.
+# v1.2 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Exit loop on first success.
 #
 #########################################################################################################
 
 # Exit now if not enough args
-if [ $# -lt 3 ]; then
+if [ ${#} -lt 3 ]; then
 	exit 4 	# Not enough args
 fi
 
@@ -19,7 +20,7 @@ fi
 CURLOPTS=""
 # CURLOPTS="--haproxy-protocol" # Set this if proxy protocol in play on real server - Requires cURL v7.60.0 (Loadbalancer.org appliance v8.6) or newer.
 # Set the following space separated list of the pages to check
-PAGES="www.loadbalancer.org www.microsoft.com"
+PAGES="www.microsoft.com www.google.com www.loadbalancer.org"
 # ${CHECK_STATUS} is the HTTP status that must be returned by at least one of the ${PAGES}
 CHECK_STATUS="200"
 
@@ -46,7 +47,7 @@ do
 		--head --silent --max-time 3 \
 		--url http://${PAGE}/ \
 		--proxy ${REAL_IP}:${REAL_PORT})
-	echo ${CURL_OUT} | grep -q -e "${CHECK_STATUS}"
+	echo ${CURL_OUT} | grep -q -e "${CHECK_STATUS}" && exit 0
 	let STATUS=${STATUS}+${?}
 	let COUNT++
 done
