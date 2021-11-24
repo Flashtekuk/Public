@@ -20,9 +20,9 @@ fi
 CURLOPTS=""
 # CURLOPTS="--haproxy-protocol" # Set this if proxy protocol in play on real server - Requires cURL v7.60.0 (Loadbalancer.org appliance v8.6) or newer.
 # Set the following space separated list of the pages to check
-PAGES="www.microsoft.com www.google.com www.loadbalancer.org"
+PAGES="www.bbc.co.uk www.microsoft.com www.google.com www.loadbalancer.org"
 # ${CHECK_STATUS} is the HTTP status that must be returned by at least one of the ${PAGES}
-CHECK_STATUS="200"
+CHECK_STATUS="301"
 
 # Command Line Parameters
 VIRTUAL_IP=${1}
