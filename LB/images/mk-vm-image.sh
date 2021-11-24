@@ -7,7 +7,7 @@ PLATFORM=fail
 IP=fail
 SSHPASS=loadbalancer
 SSHCMD="ssh -t -l root -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-CONFIG_SRC=http://192.168.87.200/config
+CONFIG_SRC=https://raw.githubusercontent.com/Flashtekuk/Public/master/LB/images
 
 function usage {
     echo "${0} -b BRANCH -i IP -p PLATFORM [hyperv|kvm|vmware|xen]"
