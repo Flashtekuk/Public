@@ -37,7 +37,7 @@ apt update ; apt upgrade -y
 ##
 # Packages required for sanity check
 #
-apt install -y dnsutils
+apt install -y dnsutils curl
 
 ##
 # Set some vars ready for sanity check
@@ -59,7 +59,7 @@ REAL_IP="$(dig +short ${SITE_NAME})"
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php7.4-dom \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml php-mail \
 		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx \
-		alpine
+		alpine haveged
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"

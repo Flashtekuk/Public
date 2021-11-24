@@ -14,3 +14,7 @@ curl -s https://packagecloud.io/install/repositories/netdata/netdata/script.deb.
 apt install -y netdata
 netdata-claim.sh -token=piBpU6UlFvRHCrLybO8oaqY3yBcIvo7OleJSX6gFHMAwD1ijLkAtA4RKzYFhnqmk8dDc3ctxP27L-Wj-xQPC9SeQqYRGkgLgjUIM8lYE4f7bpKLQOU3ls-Gs69i3OMw13r-24VM -rooms=b16a5c65-1e08-4a38-80d1-dbd8685cf31d -url=https://app.netdata.cloud
 /etc/init.d/netdata restart
+sleep 5
+curl -o /etc/netdata/netdata.conf http://localhost:19999/netdata.conf
+nano +32 /etc/netdata/netdata.conf
+/etc/init.d/netdata restart

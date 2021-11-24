@@ -1,32 +1,34 @@
 #!/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 
-###############################################################################
+##########################################################################################################
 #
 # Health check to check function of HTTP proxy
 #
 # v1.0 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Initial creation
+# v1.1 - 2021-11-24 - Neil Stone <support@loadbalancer.org> - Improve handling of multiple site checks
 #
-################################################################################
+#########################################################################################################
 
 # Exit now if not enough args
 if [ $# -lt 3 ]; then
-	# Exit state 4 if not enough args
-	exit 4
+	exit 4 	# Not enough args
 fi
 
 # user defined variables
 CURLOPTS=""
 # CURLOPTS="--haproxy-protocol" # Set this if proxy protocol in play on real server - Requires cURL v7.60.0 (Loadbalancer.org appliance v8.6) or newer.
-PAGES="www.loadbalancer.org"
-CHECK_STRING="HTTP/1.1 301 Moved Permanently"
+# Set the following space separated list of the pages to check
+PAGES="www.loadbalancer.org www.microsoft.com"
+# ${CHECK_STATUS} is the HTTP status that must be returned by at least one of the ${PAGES}
+CHECK_STATUS="200"
 
 # Command Line Parameters
 VIRTUAL_IP=${1}
 VIRTUAL_PORT=${2}
 REAL_IP=${3}
 
-# Set real server port from $4 unless that's "0" or not present (inherited)
+# Set real server port from ${4} unless that is "0" or not present (inherited)
 if [ "${4}" == "0" ] || [ -z "${4}" ]; then
 	REAL_PORT="${2}"
 else
@@ -34,12 +36,24 @@ else
 fi
 
 # Program starts
+STATUS=0
+COUNT=0
 
 for PAGE in ${PAGES}
 do
-	curl ${CURLOPTS} -I --silent --url http://${PAGE}/ --proxy ${REAL_IP}:${REAL_PORT} | grep -q -e "${CHECK_STRING}"
+	CURL_OUT=$(curl ${CURLOPTS} --output /dev/null --write-out "%{http_code}" \
+		--header 'Cache-Control: no-cache' \
+		--head --silent --max-time 3 \
+		--url http://${PAGE}/ \
+		--proxy ${REAL_IP}:${REAL_PORT})
+	echo ${CURL_OUT} | grep -q -e "${CHECK_STATUS}"
+	let STATUS=${STATUS}+${?}
+	let COUNT++
 done
 
-# set the exiting return code
-EXIT_CODE="${?}"
-exit ${EXIT_CODE}
+if [ ${COUNT} -gt ${STATUS} ]
+then
+    exit 0 # At least one returned the ${CHECK_STATUS} value.
+else
+    exit 42 # NONE returned the ${CHECK_STATUS} value.
+fi
