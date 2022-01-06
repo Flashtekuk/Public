@@ -18,7 +18,7 @@
         "init": 6,
         "init-avx2": -1,
         "mode": "auto",
-        "1gb-pages": true,
+        "1gb-pages": false,
         "rdmsr": true,
         "wrmsr": true,
         "cache_qos": false,
@@ -26,7 +26,7 @@
     },
     "cpu": {
         "enabled": true,
-        "huge-pages": true,
+        "huge-pages": false,
         "huge-pages-jit": false,
         "hw-aes": null,
         "priority": 1,
@@ -170,19 +170,6 @@
     "donate-level": 0,
     "donate-over-proxy": 1,
     "pools": [
-        {
-            "algo": "rx/arq",
-            "coin": null,
-            "url": "127.0.0.1:16662",
-            "user": "gnt1j6nPP8rKDVC7QpaR2YPPqB6FEAxPi4EZDtNvTRB92Hb43kN69Ur8nEHJe2A7YGg3YJdpSdsYnAv9NGfjqTpF9x6yASJ44S",
-            "enabled": false,
-            "tls": false,
-            "tls-fingerprint": null,
-            "daemon": true,
-            "socks5": null,
-            "daemon-poll-interval": 1000,
-            "daemon-zmq-port": -1
-        },
         {
             "algo": "rx/arq",
             "coin": null,
