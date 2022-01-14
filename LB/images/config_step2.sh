@@ -20,6 +20,8 @@ yes | ${LICENSE}
 yes | lbrestore
 ip a a ${IP}/18 dev eth0
 
+rm -rf /tmp/* /tmp/.*[!.]
+
 for ZEROPATH in root var/log ; do
         echo "$(date) - Starting zero padding in /${ZEROPATH}"
         dd if=/dev/zero of=/${ZEROPATH}/zero.dat bs=1M; sync && sleep 1 && sync && rm -f /${ZEROPATH}/zero.dat
