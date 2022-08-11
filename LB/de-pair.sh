@@ -6,9 +6,11 @@ set -e
 # Script to convert Loadbalancer.org HA paired node XML configs to a standalone master ready for pairing.      #
 # Uses 'xmlstarlet' package. Please install prior to using this script.                                        #
 #                                                                                                              #
-# v1.0 - 2021-04-12 - Neil Stone - Initial write                                                               #
+# v1.0.0 - 2021-04-12 - Neil Stone - Initial write                                                             #
 # v1.0.1 - 2021-04-12 - Neil Stone - Improve the sed                                                           #
 # v1.2.0 - 2021-05-04 - Neil Stone - Merge master and slave scripts                                            #
+# v1.3.0 - 2022-08-11 - Neil Stone - Remove healthcheck entries on slave                                       #
+# v1.3.1 - 2022-08-22 - Neil Stone - Change language to reflect primary/secondary                              #
 #                                                                                                              #
  ##############################################################################################################
 
@@ -27,9 +29,9 @@ do
 	esac
 done
 
-if [ ${MODE} = 'master' ]; then
+if [ ${MODE} = 'primary' ]; then
 	MODE_EXTRAS=''
-elif [ ${MODE} = 'slave' ]; then
+elif [ ${MODE} = 'secondary' ]; then
 	MODE_EXTRAS=" -u config/physical/network/role -v master \
 	 -u config/physical/secure/httpscert -v localhost \
 	 -d config/pound/virtual \
@@ -43,9 +45,10 @@ elif [ ${MODE} = 'slave' ]; then
 	 -d config/gslb/globalnames/globalname \
 	 -d config/gslb/members/member \
 	 -d config/gslb/pools/pool \
-	 -d config/pbr/rule"
+	 -d config/pbr/rule \
+	 -d config/healthchecks/healthcheck"
 else
-	echo "Useage: ${0} -m [master|slave] -f filename.xml"
+	echo "Useage: ${0} -m [primary|secondary] -f filename.xml"
 	exit 1
 fi
 
