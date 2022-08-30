@@ -58,7 +58,7 @@ fi
 #
 apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php8.2-xml \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml php-mail \
-		 php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx \
+		php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx php-intl \
 		alpine haveged python3-certbot-apache
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
