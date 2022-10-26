@@ -11,6 +11,8 @@ lb_check.sh - Loadbalancer.org check_mk agent to provide monitoring of haproxy a
 
 spoolersheck.sh - WMI check of Windows servers to confirm if a given service is running.
 
+sync-reload.sh - Script to copy file from primary to secondary and reload haproxy.
+
 upload_license.sh - Upload license key file to Loadbalancer.org appliance WebUI.
 
 upload_ssh.sh - Upload SSH key to Loadbalancer.org appliance WebUI.
