@@ -1,6 +1,15 @@
 #!/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
+###############################################################################
+#
+# sync-reload.sh - Script to sync files from primary to secondary node and 
+# reload haproxy.
+#
+# v1.0 - Neil Stone <support@loadbalancer.org> - 2022-10-26
+#
+###############################################################################
+
 ## FILES is a space separated list of files to sync
 FILES="/etc/haproxy/neuanalytics_allowed2.txt"
 
