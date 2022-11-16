@@ -19,4 +19,3 @@ done
 EOF
 
 rm -f /etc/udev/rules.d/70-lbo-set-iface-names.rules
-reboot
