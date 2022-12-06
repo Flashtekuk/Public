@@ -48,18 +48,18 @@ REAL_IP="$(dig +short ${SITE_NAME})"
 ##
 # Sanity check that the DNS record for ${SITE} matched the public IP for this system
 #
-#if [ ${MY_IP} != ${REAL_IP} ]; then
-#	echo "DNS vs IP mismatch: ${MY_IP} != ${REAL_IP}"
-#	exit 69
-#fi
+if [ ${MY_IP} != ${REAL_IP} ]; then
+	echo "DNS vs IP mismatch: ${MY_IP} != ${REAL_IP}"
+	exit 69
+fi
 
 ##
 # Install required packages
 #
-apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php7.4-dom \
+apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php8.2-xml \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml php-mail \
-		python-certbot-apache php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx \
-		alpine haveged
+		php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx php-intl \
+		alpine haveged python3-certbot-apache
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"
@@ -81,7 +81,7 @@ phpenmod uploadprogress
 ##
 # Generate SSL certificate
 #
-#certbot --apache -n -m ${EMAIL_ADDRESS} --agree-tos --keep -d ${SITE_NAME}
+certbot --apache -n -m ${EMAIL_ADDRESS} --agree-tos --keep -d ${SITE_NAME}
 # --test
 
 ##
@@ -134,8 +134,8 @@ cat << EOF >> /etc/apache2/sites-available/${MYSITE}.conf
         ServerAdmin webmaster@${SITE_NAME}
         DocumentRoot ${WEB_ROOT}
 
-        ErrorLog ${APACHE_LOG_DIR}/${MYSITE}-error.log
-        CustomLog ${APACHE_LOG_DIR}/${MYSITE}-access.log combined
+        ErrorLog \$\{APACHE_LOG_DIR\}/${MYSITE}-error.log
+        CustomLog \$\{APACHE_LOG_DIR\}/${MYSITE}-access.log combined
 
 </VirtualHost>
 
@@ -144,14 +144,14 @@ cat << EOF >> /etc/apache2/sites-available/${MYSITE}.conf
                 ServerAdmin webmaster@${SITE_NAME}
                 DocumentRoot ${WEB_ROOT}
 
-                ErrorLog  ${APACHE_LOG_DIR}/${MYSITE}-ssl-error.log
-                CustomLog ${APACHE_LOG_DIR}/${MYSITE}-ssl-access.log combined
+                ErrorLog  \$\{APACHE_LOG_DIR\}/${MYSITE}-ssl-error.log
+                CustomLog \$\{APACHE_LOG_DIR\}/${MYSITE}-ssl-access.log combined
 
-#               SSLCertificateFile /etc/letsencrypt/live/www.mysite.com/fullchain.pem
-#               SSLCertificateKeyFile /etc/letsencrypt/live/www.mysite.com/privkey.pem
-#               Include /etc/letsencrypt/options-ssl-apache.conf
-                SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
-                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+                SSLCertificateFile /etc/letsencrypt/live/${SITE_NAME}/fullchain.pem
+                SSLCertificateKeyFile /etc/letsencrypt/live/${SITE_NAME}/privkey.pem
+                Include /etc/letsencrypt/options-ssl-apache.conf
+#                SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
+#                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
 
                 <FilesMatch "\.(cgi|shtml|phtml|php)$">
                         SSLOptions +StdEnvVars
@@ -283,6 +283,8 @@ echo "drush sset system.maintenance_mode 0"
 echo ""
 
 elif [ ${INSTALL} == WP ]; then
+        # Install WP-CLI
+        curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar ; chmod +x /usr/local/bin/wp
 	cd ${WEB_ROOT} ; cd ..
 	wget ${WP_URL}
 	tar xf latest-en_GB.tar.gz
