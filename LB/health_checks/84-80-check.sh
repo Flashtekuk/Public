@@ -16,10 +16,11 @@ VPT=${2}
 RIP=${3}
 RPT=${4}
 RPATH="admin/healthcheck"
+URL="http://${RIP}:${RPT}/${RPATH}"
 
 echo "####################################################################################################################################" >> ${LOG}
-echo "$(date --rfc-3339=seconds) - health check of http://${RIP}:${RPT}/${RPATH} started" >> ${LOG}
-curl --silent --head --write-out '%{http_code}\n' http://${RIP}:${RPT}/${RPATH} >> ${LOG} ; EC=${?}
-echo "$(date --rfc-3339=seconds) - health check of http://${RIP}:${RPT}/${RPATH} finished - State: ${EC}" >> ${LOG}
+echo "$(date --rfc-3339=seconds) - health check of ${URL} started" >> ${LOG}
+curl --silent --head --write-out '%{http_code}\n' ${URL} >> ${LOG} ; EC=${?}
+echo "$(date --rfc-3339=seconds) - health check of ${URL} finished - State: ${EC}" >> ${LOG}
 
 exit ${EC}
