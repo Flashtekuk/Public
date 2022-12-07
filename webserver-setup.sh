@@ -134,8 +134,8 @@ cat << EOF >> /etc/apache2/sites-available/${MYSITE}.conf
         ServerAdmin webmaster@${SITE_NAME}
         DocumentRoot ${WEB_ROOT}
 
-        ErrorLog \$\{APACHE_LOG_DIR\}/${MYSITE}-error.log
-        CustomLog \$\{APACHE_LOG_DIR\}/${MYSITE}-access.log combined
+        ErrorLog \${APACHE_LOG_DIR}/${MYSITE}-error.log
+        CustomLog \${APACHE_LOG_DIR}/${MYSITE}-access.log combined
 
 </VirtualHost>
 
@@ -144,8 +144,8 @@ cat << EOF >> /etc/apache2/sites-available/${MYSITE}.conf
                 ServerAdmin webmaster@${SITE_NAME}
                 DocumentRoot ${WEB_ROOT}
 
-                ErrorLog  \$\{APACHE_LOG_DIR\}/${MYSITE}-ssl-error.log
-                CustomLog \$\{APACHE_LOG_DIR\}/${MYSITE}-ssl-access.log combined
+                ErrorLog  \${APACHE_LOG_DIR}/${MYSITE}-ssl-error.log
+                CustomLog \${APACHE_LOG_DIR}/${MYSITE}-ssl-access.log combined
 
                 SSLCertificateFile /etc/letsencrypt/live/${SITE_NAME}/fullchain.pem
                 SSLCertificateKeyFile /etc/letsencrypt/live/${SITE_NAME}/privkey.pem
