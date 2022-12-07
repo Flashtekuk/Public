@@ -24,7 +24,7 @@ WANTEDCODE="200"
 
 echo "####################################################################################################################################" >> ${LOG}
 echo "$(date --rfc-3339=seconds) - health check of ${URL} started" >> ${LOG}
-EC=$(curl --silent --head --write-out '%{http_code}\n' ${URL} 2>&1 | tee -a ${LOG})
+EC=$(curl -o /dev/null --silent --head --write-out '%{http_code}\n' ${URL} 2>&1 | tee -a ${LOG})
 echo "$(date --rfc-3339=seconds) - health check of ${URL} finished - State: ${EC}" >> ${LOG}
 
 if [ ${EC} -eq ${WANTEDCODE} ]; then
