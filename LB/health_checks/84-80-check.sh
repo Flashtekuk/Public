@@ -23,17 +23,17 @@ else
     CHECK_PORT="${4}"
 fi
 
-nc -zvn -w ${TIMEOUT} ${RIP} ${CHECK_PORT}
-NC_EC=${?}
-if [ ${NC_EC} -ne 0 ]; then
-	exit 199
-fi
-
 LOG=/var/log/L4-v84_80-healthcheck.log
 TIMEOUT=2
 RPATH="admin/healthcheck"
 URL="http://${RIP}:${CHECK_PORT}/${RPATH}"
 WANTEDCODE="200"
+
+nc -zvn -w ${TIMEOUT} ${RIP} ${CHECK_PORT}
+NC_EC=${?}
+if [ ${NC_EC} -ne 0 ]; then
+	exit 199
+fi
 
 echo "####################################################################################################################################" >> ${LOG}
 echo "$(date --rfc-3339=seconds) - health check of ${URL} started" >> ${LOG}
