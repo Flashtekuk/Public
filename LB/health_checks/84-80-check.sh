@@ -50,7 +50,7 @@ if [ ${CURL_EC} -eq ${WANTEDCODE} ]; then
 	echo "Exit state matched ${WANTEDCODE} - Exiting 0" >> ${LOG}
 	exit 0
 else
-	echo "Exit state did not match ${WANTEDCODE} - Exiting 0" >> ${LOG}
+	echo "Exit state did not match ${WANTEDCODE} - Exiting ${CURL_EC}" >> ${LOG}
 	exit ${CURL_EC}
 fi
 
