@@ -29,7 +29,7 @@ RPATH="admin/healthcheck"
 URL="http://${RIP}:${CHECK_PORT}/${RPATH}"
 WANTEDCODE="200"
 
-nc -zvn -w ${TIMEOUT} ${RIP} ${CHECK_PORT}
+nc -zvn -w ${TIMEOUT} ${RIP} ${CHECK_PORT} > /dev/null
 NC_EC=${?}
 if [ ${NC_EC} -ne 0 ]; then
 	exit 199
