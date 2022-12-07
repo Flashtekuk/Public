@@ -10,6 +10,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # v0.3 - Neil Stone <support@loadbalancer.org> - 20221207 - Updated output from curl to output to tee and append to log
 # v0.4 - Neil Stone <support@loadbalancer.org> - 20221207 - Exit 0 on desired http exit code
 # v0.5 - Neil Stone <support@loadbalancer.org> - 20221207 - Additional checks for port open, reorder a few bits, include timeouts
+# v0.6 - Neil Stone <support@loadbalancer.org> - 20221207 - Redirect output of nc to /dev/null
 #
 ###################################################################################################################################
 
