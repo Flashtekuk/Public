@@ -13,14 +13,13 @@ apt install -y screen rsync htop curl qemu-guest-agent xinetd
 #
 mkdir -p /root/.ssh -m 0700
 echo "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJd2lcSaoR2rpBhonj08A5ouX0EaoIqhzuHcD8rc7TjMHh8qHtCO20mfVl73AXUNGg2hNSDzhMeWHvSGf5au2/4= neil@threadripper" >> /root/.ssh/authorized_keys
-echo "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCcrLX1MVmzCsxz7KiHyjdICZU91hnrok5IY9E6kIoZK0Q379xiNEYuGSBCuitZcumYd41bra+hyaM/pQMBMb1A= neil@IntTest1" >> /root/.ssh/authorized_keys
 
 groupadd wheel
-gpasswd -a neil wheel
+gpasswd -a admin wheel
 
 sed -i.bak -e 's/# auth       sufficient pam_wheel.so trust/auth       sufficient pam_wheel.so trust/g' /etc/pam.d/su
 
-cp -a /root/.ssh /home/neil ; chown neil.neil /home/neil/.ssh -R ; chmod 0700 /home/neil/.ssh
+#cp -a /root/.ssh /home/admin ; chown admin.admin /home/admin/.ssh -R ; chmod 0700 /home/admin/.ssh
 
 echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;33m\]@\[\033[01;36m\]\h \[\033[01;33m\]\w \[\033[01;35m\]\$ \[\033[00m\]'" >> /root/.bashrc
 

@@ -11,15 +11,15 @@ echo ""
 read -s -p "Input MySQL root password: " MYSQL_PASS
 echo ""
 echo ""
-#read -p "Enter email address for letsencrypt: " EMAIL_ADDRESS
-#echo ""
+read -p "Enter email address for letsencrypt: " EMAIL_ADDRESS
+echo ""
 echo ""
 echo "##############################################"
 
 if [ $# -gt 0 ]; then
 	INSTALL=${1}
 	else
-	INSTALL="DRUPAL"
+	INSTALL="WP"
 fi
 
 ##
@@ -75,7 +75,7 @@ SITE_DB_PASS="$(pwgen -cnsB 10 1)"
 # Install php uploadprogress plugin
 #
 pecl install uploadprogress
-echo "extension=uploadprogress.so" > /etc/php/7.4/mods-available/uploadprogress.ini
+echo "extension=uploadprogress.so" > /etc/php/8.2/mods-available/uploadprogress.ini
 phpenmod uploadprogress
 
 ##
@@ -300,11 +300,13 @@ fi
 ##
 # Bring Apache2 back up so we can access WebUI...
 #
+a2dissite 000-default
+a2dissite 000-default-le-ssl
 systemctl start apache2
 
 echo "Enjoy :-)"
 echo ""
-echo "You should now configure the site via https://${SITE_NAME}"
+echo "You should now configure the site via https://${SITE_NAME}/"
 echo "and the following credentials;"
 echo ""
 cat /root/site_details.txt
