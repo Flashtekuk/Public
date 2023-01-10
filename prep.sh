@@ -6,7 +6,7 @@
 ##
 # Install packages
 #
-apt install -y screen rsync htop curl qemu-guest-agent xinetd
+apt install -y screen rsync htop curl qemu-guest-agent xinetd mlocate
 
 ##
 # My personal customisations
