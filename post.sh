@@ -9,6 +9,10 @@ mv wp-cli.phar /usr/local/bin/wp
 curl -O https://raw.githubusercontent.com/wp-cli/wp-cli/v2.4.0/utils/wp-completion.bash
 mv wp-completion.bash /etc/bash_completion.d/
 
+echo "Running updatedb..."
+updatedb
+echo "Done..."
+
 exit 0
 
 # Netdata monitoring
