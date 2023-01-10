@@ -56,10 +56,13 @@ fi
 ##
 # Install required packages
 #
-apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php8.2-xml \
+PHPVER=8.2
+
+apt install -y mariadb-server apache2 php curl screen rsync wget php-mysql php-gd php-xml php-fpm \
 		php-mbstring php-pear php-zip php-dev pwgen git zip unzip certbot php-xml php-mail \
 		php-apcu php-curl libphp-phpmailer imagemagick php-imagick bsd-mailx php-intl \
 		alpine haveged python3-certbot-apache
+#php${PHPVER}-xml \
 
 DRUPAL_URL="https://www.drupal.org/download-latest/tar.gz"
 WP_URL="https://en-gb.wordpress.org/latest-en_GB.tar.gz"
@@ -75,7 +78,9 @@ SITE_DB_PASS="$(pwgen -cnsB 10 1)"
 # Install php uploadprogress plugin
 #
 pecl install uploadprogress
-echo "extension=uploadprogress.so" > /etc/php/8.2/mods-available/uploadprogress.ini
+for PHPDIR in /etc/php/*; do
+	echo "extension=uploadprogress.so" > ${PHPDIR}/mods-available/uploadprogress.ini
+done
 phpenmod uploadprogress
 
 ##
@@ -185,8 +190,14 @@ a2enmod rewrite
 a2enmod headers
 a2enmod remoteip
 a2enmod ssl
-# Might want this at a later point
-#a2enmod http2
+###
+a2dismod php*
+a2enconf php*-fpm
+a2enmod proxy_fcgi
+a2dismod mpm_prefork
+a2enmod mpm_event
+a2enmod http2
+###
 
 ##
 # Stop so we don't trip over our own feets
