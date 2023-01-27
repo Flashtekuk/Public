@@ -7,6 +7,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #
 # v1.0 - Initial write - 2023-01-26 - Neil Stone <support@loadbalancer.org>
 # v1.1 - Additional logic to handle IP address on the CLI - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.2 - Show exit state from cURL if not 0 - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 #
 ###
 #
@@ -88,5 +89,9 @@ curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 	https://${LB_IP}:${LB_PORT}/lbadmin/config/physicaladv.php?action=set
 
 CURL_EC=${?}
+
+if [ ${CURL_EC} -ne 0 ]; then
+	echo "cURL exited with an error state - ${CURL_EC}"
+fi
 
 exit ${CURL_EC}
