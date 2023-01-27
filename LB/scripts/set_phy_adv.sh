@@ -6,6 +6,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Script to set "Local Configuration" --> "Physical Advanced" settings on Loadbalancer.org appliances
 #
 # v1.0 - Initial write - 2023-01-26 - Neil Stone <support@loadbalancer.org>
+# v1.1 - Additional logic to handle IP address on the CLI - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 #
 ###
 #
@@ -13,20 +14,26 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #
 ###
 
-USERNAME=loadbalancer # WebUI username
-PASSWORD=loadbalancer # WebUI password
-LB_IP=192.168.87.1 # WebUI IP address
-LB_PORT=9443 # WebUI HTTPs port
+if [ ${#} -ne 1 ]; then
+	echo "Usage: ${0} IP"
+	exit 7
+fi
+
+# WebUI credentials
+USERNAME=loadbalancer  # WebUI username
+PASSWORD=loadbalancer  # WebUI password
+LB_IP=${1}             # WebUI IP address
+LB_PORT=9443           # WebUI HTTPs port
 
 # Network Proxy
-PROXY_IP=WebProxy # default is blank
-PROXY_PORT=3128 # default is blank
-PROXY_USERNAME=MyProxyUsername # default is blank
-PROXY_PASSWORD=MyProxyPassword # default is blank
+PROXY_IP=""        # default is blank
+PROXY_PORT=""      # default is blank
+PROXY_USERNAME=""  # default is blank
+PROXY_PASSWORD=""  # default is blank
 
 # Management Gateway
-MANAGEMENT_IFACE=192.168.87.1 # default is blank
-MANAGEMENT_GATEWAY= # default is blank
+MANAGEMENT_IFACE=""   # default is blank
+MANAGEMENT_GATEWAY="" # default is blank
 
 # Firewall
 CONNTRACK_TABLE_SIZE=524288 # default is 52488
@@ -35,20 +42,20 @@ CONNTRACK_TABLE_SIZE=524288 # default is 52488
 OFFLOAD_ENABLE=on # on | off # default is on
 
 # Online Updates
-UPDATE_SERVER=update.loadbalancer.org # default is update.loadbalancer.org
-UPDATE_CHECK=on # on | off - default is on
+UPDATE_SERVER=update.loadbalancer.org  # default is update.loadbalancer.org
+UPDATE_CHECK=on                        # on | off - default is on
 
 # SMTP Relay
-SMTP_RELAY=192.168.120.225 # SMTP relay host # default is blank
+SMTP_RELAY="" # SMTP relay host # default is blank
 
 # Logging
-SYSLOG_INTERVAL=30
-SYSLOG_BURST=1000
-SYSLOG_DESTINATION=both # local | remote | both # default to local
-SYSLOG_IP=192.168.120.250 # IP | hostname # default is blank
-SYSLOG_PORT=514
-SYSLOG_PROTO=TCP # TCP | UDP
-SYSLOG_REMOTE_TEMPLATE="" # default is blank
+SYSLOG_INTERVAL=30         # default is 30
+SYSLOG_BURST=1000          # default is 1000
+SYSLOG_DESTINATION=both    # local | remote | both # default is local
+SYSLOG_IP=10.69.42.255     # IP | hostname # default is blank
+SYSLOG_PORT=514            # default is 514
+SYSLOG_PROTO=TCP           # TCP | UDP # default is TCP
+SYSLOG_REMOTE_TEMPLATE=""  # default is blank
 
 curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 \
