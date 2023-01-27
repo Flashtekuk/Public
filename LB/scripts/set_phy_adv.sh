@@ -5,13 +5,14 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 #
 # Script to set "Local Configuration" --> "Physical Advanced" settings on Loadbalancer.org appliances
 #
-# v1.0 - Initial write - 2023-01-26 - Neil Stone <support@loadbalancer.org>
-# v1.1 - Additional logic to handle IP address on the CLI - 2023-01-27 - Neil Stone <support@loadbalancer.org>
-# v1.2 - Show exit state from cURL if not 0 - 2023-01-27 - Neil Stone <support@loadbalancer.org>
-# v1.3 - Quickly check if the LB IP and port are contactable - 2023-01-27 - Neil Stone <support@loadbalancer.org>
-# v1.4 - Change MGMT_IFACE varname and provide confirm on exit - 2023-01-27 - Neil Stone <support@loadbalancer.org>
-# v1.5 - ping the LB to see if basic life signs - 2023-01-27 - Neil Stone <support@loadbalancer.org>
-# v1.6 - Show exit states on all non 0 exits, refer to man page for appropriate binary - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.0   - Initial write - 2023-01-26 - Neil Stone <support@loadbalancer.org>
+# v1.1   - Additional logic to handle IP address on the CLI - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.2   - Show exit state from cURL if not 0 - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.3   - Quickly check if the LB IP and port are contactable - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.4   - Change MGMT_IFACE varname and provide confirm on exit - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.5   - ping the LB to see if basic life signs - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.6   - Show exit states on all non 0 exits, refer to man page for appropriate binary - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.6.1 - Bugfix - put the correct var against the proxy server (Thanks Dave) - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 #
 ###
 #
@@ -81,7 +82,7 @@ fi
 # Make the post...
 curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 \
-	--form internet_proxy_ip=${PROXY_USERNAME} \
+	--form internet_proxy_ip=${PROXY_IP} \
 	--form internet_proxy_port=${PROXY_PORT} \
 	--form proxyUsername=${PROXY_USERNAME} \
 	--form proxyPassword=${PROXY_PASSWORD} \
