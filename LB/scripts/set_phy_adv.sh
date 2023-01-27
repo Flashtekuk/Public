@@ -60,7 +60,7 @@ SYSLOG_PROTO=TCP           # TCP | UDP # default is TCP
 SYSLOG_REMOTE_TEMPLATE=""  # default is blank
 
 # Quickly check if the LB IP and Port are contactable
-nc -zvn -w 5 ${LB_IP} ${LB_PORT} 2>/dev/null 1>&2
+nc -zv -w 5 ${LB_IP} ${LB_PORT} 2>/dev/null 1>&2
 NC_EC=${?}
 if [ ${NC_EC} -ne 0 ]; then
 	echo "Unable to contact ${LB_IP} on port ${LB_PORT}"
