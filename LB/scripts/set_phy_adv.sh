@@ -9,6 +9,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # v1.1 - Additional logic to handle IP address on the CLI - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 # v1.2 - Show exit state from cURL if not 0 - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 # v1.3 - Quickly check if the LB IP and port are contactable - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.4 - Change MGMT_IFACE varname and provide confirm on exit - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.5 - ping the LB to see if basic life signs - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 #
 ###
 #
@@ -34,7 +36,7 @@ PROXY_USERNAME=""  # default is blank
 PROXY_PASSWORD=""  # default is blank
 
 # Management Gateway
-MANAGEMENT_IFACE=""   # default is blank
+MANAGEMENT_IP=""   # default is blank
 MANAGEMENT_GATEWAY="" # default is blank
 
 # Firewall
@@ -59,14 +61,23 @@ SYSLOG_PORT=514            # default is 514
 SYSLOG_PROTO=TCP           # TCP | UDP # default is TCP
 SYSLOG_REMOTE_TEMPLATE=""  # default is blank
 
+# Ping LB to see if it's alive
+ping -q -c 1 ${LB_IP} 2>/dev/null
+PING_EC=${?}
+if [ ${PING_EC} -ne 0 ]; then
+	echo "Ping to ${LB_IP} failed"
+	exit ${PING_EC}
+fi
+
 # Quickly check if the LB IP and Port are contactable
 nc -zv -w 5 ${LB_IP} ${LB_PORT} 2>/dev/null 1>&2
 NC_EC=${?}
 if [ ${NC_EC} -ne 0 ]; then
 	echo "Unable to contact ${LB_IP} on port ${LB_PORT}"
-	exit 5
+	exit ${NC_EC}
 fi
 
+# Make the post...
 curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 \
 	--form internet_proxy_ip=${PROXY_USERNAME} \
@@ -74,7 +85,7 @@ curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 	--form proxyUsername=${PROXY_USERNAME} \
 	--form proxyPassword=${PROXY_PASSWORD} \
 \
-	--form mgt_iface=${MANAGEMENT_IFACE} \
+	--form mgt_iface=${MANAGEMENT_IP} \
 	--form management_gateway=${MANAGEMENT_GATEWAY} \
 \
 	--form conntrack_table_size=${CONNTRACK_TABLE_SIZE} \
@@ -98,9 +109,10 @@ curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 	https://${LB_IP}:${LB_PORT}/lbadmin/config/physicaladv.php?action=set
 
 CURL_EC=${?}
-
 if [ ${CURL_EC} -ne 0 ]; then
 	echo "cURL exited with an error state - ${CURL_EC}"
+	exit ${CURL_EC}
 fi
 
-exit ${CURL_EC}
+echo "Update to ${LB_IP} completed."
+exit 0
