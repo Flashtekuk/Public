@@ -11,6 +11,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # v1.3 - Quickly check if the LB IP and port are contactable - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 # v1.4 - Change MGMT_IFACE varname and provide confirm on exit - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 # v1.5 - ping the LB to see if basic life signs - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.6 - Show exit states on all non 0 exits, refer to man page for appropriate binary - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 #
 ###
 #
@@ -65,7 +66,7 @@ SYSLOG_REMOTE_TEMPLATE=""  # default is blank
 ping -q -c 1 ${LB_IP} 2>/dev/null
 PING_EC=${?}
 if [ ${PING_EC} -ne 0 ]; then
-	echo "Ping to ${LB_IP} failed"
+	echo "Ping to ${LB_IP} failed - exit state ${PING_EC} - check 'man ping' "
 	exit ${PING_EC}
 fi
 
@@ -73,7 +74,7 @@ fi
 nc -zv -w 5 ${LB_IP} ${LB_PORT} 2>/dev/null 1>&2
 NC_EC=${?}
 if [ ${NC_EC} -ne 0 ]; then
-	echo "Unable to contact ${LB_IP} on port ${LB_PORT}"
+	echo "Unable to contact ${LB_IP} on port ${LB_PORT} - exit state ${NC_EC} - check 'man nc' "
 	exit ${NC_EC}
 fi
 
@@ -110,7 +111,7 @@ curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 
 CURL_EC=${?}
 if [ ${CURL_EC} -ne 0 ]; then
-	echo "cURL exited with an error state - ${CURL_EC}"
+	echo "cURL exited with an error - exit state ${CURL_EC} - check 'man curl' "
 	exit ${CURL_EC}
 fi
 
