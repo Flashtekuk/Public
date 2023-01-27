@@ -8,6 +8,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # v1.0 - Initial write - 2023-01-26 - Neil Stone <support@loadbalancer.org>
 # v1.1 - Additional logic to handle IP address on the CLI - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 # v1.2 - Show exit state from cURL if not 0 - 2023-01-27 - Neil Stone <support@loadbalancer.org>
+# v1.3 - Quickly check if the LB IP and port are contactable - 2023-01-27 - Neil Stone <support@loadbalancer.org>
 #
 ###
 #
@@ -57,6 +58,14 @@ SYSLOG_IP=10.69.42.255     # IP | hostname # default is blank
 SYSLOG_PORT=514            # default is 514
 SYSLOG_PROTO=TCP           # TCP | UDP # default is TCP
 SYSLOG_REMOTE_TEMPLATE=""  # default is blank
+
+# Quickly check if the LB IP and Port are contactable
+nc -zvn -w 5 ${LB_IP} ${LB_PORT} 2>/dev/null 1>&2
+NC_EC=${?}
+if [ ${NC_EC} -ne 0 ]; then
+	echo "Unable to contact ${LB_IP} on port ${LB_PORT}"
+	exit 5
+fi
 
 curl --insecure -u ${USERNAME}:${PASSWORD} -X POST \
 \
