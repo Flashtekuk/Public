@@ -41,7 +41,17 @@ echo '<<<lbha>>>'
 LOCALSTATE=$(cat /var/log/nodestatus_local)
 echo "${HOSTNAME}:${LOCALSTATE}"
 
-#echo '<<<lbver>>>'
+echo '<<<lbver>>>'
+if [ -f /etc/loadbalancer.org/update_available ]; then
+	if [ $(grep -q -e '^\"\"$' /etc/loadbalancer.org/update_available ; echo ${?}) = 1 ]; then
+		echo "Update available"
+	else
+		echo "No update available"
+	fi
+else
+	echo "Update flag file not present"
+fi
+
 #LOCALLBVER=$(cut /etc/loadbalancer.org/version.txt -f3 -d\: | cut -f 3 -d\/ | cut -f 1 -d ' ' | sed -e 's/\-/\./g' | rev | cut -d\. -f 3- | rev)
 #echo "Local version is: ${LOCALLBVER}"
 #REMOTELBVER=$(curl https://www.loadbalancer.org/support/ 2>/dev/null |grep "Latest version" | sed -e 's/<[^>]*>//g' | awk '{print $3}')
