@@ -3,7 +3,9 @@ Scripts to automate the generation of Loadbalancer.org VM images
 
 README.md - This file
 
-mk-usb.sh - script to automate the creation of USB image files from a USB script.
+Make_Image_From_USB.sh - Script to create image fome from USB disk.
+
+mk-usb.sh - Old script to automate the creation of USB image files from a USB disk.
 
 mk-vm-image.sh - workstation script to initiate build process, must be run from within appropriate git repo.
 

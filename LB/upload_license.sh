@@ -14,4 +14,4 @@ curl -k -X POST -u ${USERNAME}:${PASSWORD} \
 	--form "submit=file" \
 	--form "value=@${LICENSE}" \
 	--silent
-	 https://${IP}:9443/lbadmin/config/upgrade.php
+	 "https://${LB}:9443/lbadmin/config/upgrade.php"

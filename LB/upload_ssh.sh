@@ -15,9 +15,9 @@ if [ ${#} -ne 2 ]; then
 	exit 69
 fi
 
-curl -k -u ${USERNAME}:${PASSWORD} -X POST \
-	--form hostname=${HOSTNAME} \
+curl -k -u "${USERNAME}":"${PASSWORD}" -X POST \
+	--form hostname="${HOSTNAME}" \
 	--form username="root" \
-	--form public_key=@${KEYFILE} \
+	--form public_key=@"${KEYFILE}" \
 	"https://${LB}:9443/lbadmin/config/security.php?action=upload_pub_user" \
 	--silent > /dev/null
