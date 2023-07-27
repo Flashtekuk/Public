@@ -1,11 +1,12 @@
 #!/bin/bash
-PATH=/usr/bin:
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 ######################
 #
 #  cipherscan.sh - Bash script to check which ciphers are available on a target system using both available versions of openssl on a Loadbalancer.org appliance.
 #  Inspiration from https://www.ise.io/blog/archives/using-openssl-determine-ciphers-enabled-server/
 #
 #  v0.1 - 2023-07-23 - Initial write - Neil Stone <support@loadbalancer.org>
+#  v0.2 - 2023-07-23 - Added basic check for port contactability, renamed a few vaiables - Neil Stone <support@loadbalancer.org>
 #
 ######################
 
@@ -14,17 +15,24 @@ if [ ${#} -ne 2 ]; then
     exit 1
 fi
 
-server=${1}
-port=${2}
+SERVER=${1}
+PORT=${2}
 
-for openssl in /usr/local/bin/openssl /usr/bin/openssl; do
+nc -w 5 -zv ${SERVER} ${PORT}
+NC_EC=${?}
+if [ ${NC_EC} != 0 ]; then
+    echo "Unable to connect to ${SERVER} on port ${PORT}"
+    exit 2
+fi
+
+for OPENSSL in /usr/local/bin/openssl /usr/bin/openssl; do
     echo "#################################"
-    echo "Scanning - ${server}:${port}" with ${openssl}
+    echo "Scanning - ${SERVER}:${PORT}" with ${OPENSSL}
     echo "#################################"
 
-    for v in ssl2 ssl3 tls1 tls1_1 tls1_2 tls1_3; do
-        for c in $(${openssl} ciphers 'ALL:eNULL' | tr ':' ' '); do
-            ${openssl} s_client -connect ${server}:${port} -cipher ${c} -${v} < /dev/null > /dev/null 2>&1 && echo -e "${v}:\t${c}"
+    for VER in ssl2 ssl3 tls1 tls1_1 tls1_2 tls1_3; do
+        for CIPHER in $(${OPENSSL} ciphers 'ALL:eNULL' | tr ':' ' '); do
+            ${OPENSSL} s_client -connect ${SERVER}:${PORT} -cipher ${CIPHER} -${VER} < /dev/null > /dev/null 2>&1 && echo -e "${VER}:\t${CIPHER}"
         done
     done
 done
