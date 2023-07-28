@@ -8,6 +8,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 #  v0.1 - 2023-07-27 - Initial write - Neil Stone <support@loadbalancer.org>
 #  v0.2 - 2023-07-27 - Added basic check for port contactability, renamed a few vaiables - Neil Stone <support@loadbalancer.org>
 #  v0.3 - 2023-07-28 - Added support for check support from haproxy.cfg - Neil Stone <support@loadbalancer.org>
+#  v0.4 - 2023-07-28 - Relocated a lost 'done' - Neil Stone <support@loadbalancer.org>
 #
 ######################
 
@@ -45,12 +46,12 @@ for OPENSSL in /usr/local/bin/openssl /usr/bin/openssl; do
         for CIPHER in $(awk -F\" '/ssl-default-server-ciphers\ /{print $2}' /etc/haproxy/haproxy.cfg |  tr ':' ' '); do
             ${OPENSSL} s_client -connect ${SERVER}:${PORT} -cipher ${CIPHER} -${VER} < /dev/null > /dev/null 2>&1 && echo -e "${VER}:\t${CIPHER}"
         done
+    done
     for VER in tls1_3; do
         for CIPHERSUITE in $(awk -F\" '/ssl-default-server-ciphersuites\ /{print $2}' /etc/haproxy/haproxy.cfg |  tr ':' ' '); do
             ${OPENSSL} s_client -connect ${SERVER}:${PORT} -cipher ${CIPHERSUITE} -${VER} < /dev/null > /dev/null 2>&1 && echo -e "${VER}:\t${CIPHERSUITE}"
         done
     done
-done
 done
 
 echo "#################################"
