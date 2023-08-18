@@ -6,11 +6,12 @@ set -e
 # Script to convert Loadbalancer.org HA paired node XML configs to a standalone master ready for pairing.      #
 # Uses 'xmlstarlet' package. Please install prior to using this script.                                        #
 #                                                                                                              #
-# v1.0.0 - 2021-04-12 - Neil Stone - Initial write                                                             #
-# v1.0.1 - 2021-04-12 - Neil Stone - Improve the sed                                                           #
-# v1.2.0 - 2021-05-04 - Neil Stone - Merge master and slave scripts                                            #
-# v1.3.0 - 2022-08-11 - Neil Stone - Remove healthcheck entries on slave                                       #
-# v1.3.1 - 2022-08-22 - Neil Stone - Change language to reflect primary/secondary                              #
+# v1.0.0 - 2021-04-12 - Neil Stone - Initial write.                                                            #
+# v1.0.1 - 2021-04-12 - Neil Stone - Improve the sed.                                                          #
+# v1.2.0 - 2021-05-04 - Neil Stone - Merge master and slave scripts.                                           #
+# v1.3.0 - 2022-08-11 - Neil Stone - Remove healthcheck entries on slave.                                      #
+# v1.3.1 - 2022-08-22 - Neil Stone - Change language to reflect primary/secondary.                             #
+# v1.3.2 - 2023-08-18 - Neil Stone - Move setting WebUI HTTPs cert to 'common' changes.                        #
 #                                                                                                              #
  ##############################################################################################################
 
@@ -33,7 +34,6 @@ if [ ${MODE} = 'primary' ]; then
 	MODE_EXTRAS=''
 elif [ ${MODE} = 'secondary' ]; then
 	MODE_EXTRAS=" -u config/physical/network/role -v master \
-	 -u config/physical/secure/httpscert -v localhost \
 	 -d config/pound/virtual \
 	 -d config/haproxy/virtual \
 	 -d config/ldirectord/virtual \
@@ -80,6 +80,8 @@ xmlstarlet edit -O -P \
  -d config/physical/pool/node/role \
  -d config/physical/pool/node/ip \
  -d config/physical/pool/node/type \
+\
+ -u config/physical/secure/httpscert -v localhost \
 \
  ${MODE_EXTRAS} \
  ${CONFIG} | sed -e "/^$/d" -e "/\t$/d" > ${OUT}
