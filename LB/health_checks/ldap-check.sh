@@ -29,7 +29,7 @@ fi
 if ! nc -w "${checkTimeout}" -zn "${checkIP}" "${checkPort}"; then
     exit 42
 else
-    ldapsearch -H "${checkProtocol}://${checkIP}:${checkPort}" | grep -q "LDAP"
+    ldapsearch -H "${checkProtocol}://${checkIP}:${checkPort}" -x | grep -q "LDAP"
     exit ${?}
 fi
 
