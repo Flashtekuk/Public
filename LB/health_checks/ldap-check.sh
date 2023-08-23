@@ -26,7 +26,7 @@ elif [[ "${checkPort}" == "636" ]]; then
     checkProtocol="ldaps"
 fi
 
-if ! nc -w "${checkTimeout}" -zn "${checkIP}" "${checkPort}"; then
+if ! nc -w "${checkTimeout}" -zn "${checkIP}" "${checkPort}" > /dev/null; then
     exit 42
 else
     ldapsearch -H "${checkProtocol}://${checkIP}:${checkPort}" -x | grep -q "LDAP"
