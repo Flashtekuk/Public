@@ -84,20 +84,20 @@ sleep 1
 
 sec_off
 
-if [ ${CLOUD} = 0 ]; then
+if [ ${CLOUD} = "0" ]; then
         sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
         sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE}
         echo "Configure done."
 fi
 
-if [ $CLOUD = 1 ]; then
+if [ ${CLOUD} = "1" ]; then
         if [ ${PLATFORM} = "ec2" ]; then
                 ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot" |& tee -a ${LOGFILE}
 
-        elif [ ${PLATFORM} = "gcp"]; then
+        elif [ ${PLATFORM} = "gcp" ]; then
                 # GCP commands |& tee -a ${LOGFILE}
 
-        elif [ ${PLATFORM} = "azure"]; then
+        elif [ ${PLATFORM} = "azure" ]; then
                 # Azure commands |& tee -a ${LOGFILE}
         fi
 fi
