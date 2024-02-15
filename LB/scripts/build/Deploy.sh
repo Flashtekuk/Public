@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x
 
 if [ ${#} -ne 3 ]; then
         echo "Usage: ${0} IP branch platform"
@@ -91,12 +90,17 @@ if [ ${CLOUD} = 0 ]; then
         echo "Configure done."
 fi
 
-if [ ${PLATFORM} = "ec2" ]; then
-        ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot"
+if [ $CLOUD = 1 ]; then
+        if [ ${PLATFORM} = "ec2" ]; then
+                ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot" |& tee -a ${LOGFILE}
+
+        elif [ ${PLATFORM} = "gcp"]; then
+                # GCP commands |& tee -a ${LOGFILE}
+
+        elif [ ${PLATFORM} = "azure"]; then
+                # Azure commands |& tee -a ${LOGFILE}
+        fi
 fi
-
-
-#clear
 
 echo ""
 echo " -=: Logfile: ${LOGFILE} :=-"
