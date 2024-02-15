@@ -14,8 +14,17 @@ BRANCH=${2}
 PLATFORM=${3}
 export SSHPASS=loadbalancer
 HOSTNAME=$(hostname)
+CLOUD=0
 
 ping -c 1 ${APPLIANCE}
+
+if [ "${PLATFORM}" = "aws" ] || [ "${PLATFORM}" = "amazonwebservices" ]; then
+        PLATFORM=ec2
+fi
+
+if [ "${PLATFORM}" = "ec2" ] || [ "${PLATFORM}" = "gcp" ]  || [ "${PLATFORM}" = "azure" ] ; then
+        CLOUD=1
+fi
 
 function sec_off () {
         echo "Adjusting security..."
@@ -62,32 +71,30 @@ echo "BuildRPM starting..."
 echo "BuildRPM complete."
 sleep 1
 
-echo "Copy configure script to ${APPLIANCE} - Starting"
-sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
-echo "Copy configure script to ${APPLIANCE} - Done"
-sleep 1
+if [ ${CLOUD} = 0 ]; then
+        echo "Copy configure script to ${APPLIANCE} - Starting"
+        sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
+        echo "Copy configure script to ${APPLIANCE} - Done"
+        sleep 1
+fi
 
 echo "DeployRPMs starting..."
 ./scripts/deploy/deployrpms.sh ${BRANCH} ${APPLIANCE} ${PLATFORM} |& tee -a ${LOGFILE}
 echo "DeployRPMs complete."
 sleep 1
 
-#echo "Configuring..."
-#echo ""
-#echo "###################################################################"
-#echo "#                                                                 #"
-#echo "# Open a terminal on the appliance, and run the following command #"
-#echo "# /root/configure.sh ${APPLIANCE}                                 #"
-#echo "#                                                                 #"
-#echo "###################################################################"
-#echo ""
 sec_off
-#source scripts/common.d/ssh.sh
-#upload /root ../configure.sh
-#run /root/configure.sh ${APPLIANCE}
-sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
-sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE}
-echo "Configure done."
+
+if [ ${CLOUD} = 0 ]; then
+        sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
+        sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE}
+        echo "Configure done."
+fi
+
+if [ ${PLATFORM} = "ec2" ]; then
+        ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot"
+fi
+
 
 #clear
 
