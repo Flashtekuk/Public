@@ -17,6 +17,7 @@ CLOUD=0
 
 ping -c 1 ${APPLIANCE}
 
+# Check if this is a cloud deployment
 if [ "${PLATFORM}" = "aws" ] || [ "${PLATFORM}" = "amazonwebservices" ]; then
         PLATFORM=ec2
 fi
@@ -47,8 +48,6 @@ function sec_off () {
         echo "Security adjustments completed..."
 }
 
-sec_off
-
 git pull |& tee -a ${LOGFILE}
 git checkout ${BRANCH} |& tee -a ${LOGFILE}
 git pull |& tee -a ${LOGFILE}
@@ -71,21 +70,21 @@ echo "BuildRPM complete."
 sleep 1
 
 if [ ${CLOUD} = 0 ]; then
+        sec_off
+
         echo "Copy configure script to ${APPLIANCE} - Starting"
         sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
         echo "Copy configure script to ${APPLIANCE} - Done"
         sleep 1
-fi
 
-echo "DeployRPMs starting..."
-./scripts/deploy/deployrpms.sh ${BRANCH} ${APPLIANCE} ${PLATFORM} |& tee -a ${LOGFILE}
-echo "DeployRPMs complete."
-sleep 1
+        echo "DeployRPMs starting..."
+        ./scripts/deploy/deployrpms.sh ${BRANCH} ${APPLIANCE} ${PLATFORM} |& tee -a ${LOGFILE}
+        echo "DeployRPMs complete."
+        sleep 1
 
-sec_off
+        sec_off
 
-if [ ${CLOUD} = 0 ]; then
-        sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
+        echo "Executing configure script..."
         sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE}
         echo "Configure done."
 fi
@@ -93,19 +92,23 @@ fi
 if [ ${CLOUD} = 1 ]; then
         if [ ${PLATFORM} = ec2 ]; then
                 echo "Platform: ${PLATFORM}"
-                ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot" |& tee -a ${LOGFILE}
+#                ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot" |& tee -a ${LOGFILE}
+                TARGET=byol
 
         elif [ ${PLATFORM} = gcp ]; then
                 echo "Platform: ${PLATFORM}"
                 # GCP commands |& tee -a ${LOGFILE}
+                TARGET=byol-support
 
         elif [ ${PLATFORM} = azure ]; then
                 echo "Platform: ${PLATFORM}"
                 # Azure commands |& tee -a ${LOGFILE}
+                TARGET=byol
 
         else
                 echo "Platform: \"${PLATFORM}\" not known"
         fi
+        scripts/build.sh ${BRANCH} ${PLATFORM} ${TARGET} |& tee -a ${LOGFILE}
 fi
 
 echo ""
@@ -123,7 +126,13 @@ echo ""
 echo ""
 echo ""
 echo ""
-echo "Deployment on \"${APPLIANCE}\" running on \"${PLATFORM}\" and branch \"${BRANCH}\" finished"
+echo "Deployment on \"${APPLIANCE}\" running on \"${PLATFORM}\" and branch \"${BRANCH}\" finished."
+echo ""
+echo "Please check the log for any issues, dumping last 10 lines here."
+echo ""
+echo "-=:###################:=-"
+tail -n 10 ${LOGFILE}
+echo "-=:###################:=-"
 echo ""
 echo " -=: Logfile: ${LOGFILE} :=-"
 echo ""
