@@ -53,60 +53,63 @@ git checkout ${BRANCH} |& tee -a ${LOGFILE}
 git pull |& tee -a ${LOGFILE}
 
 if [ -f ./scripts/rpm/fetchlocalrpms.sh ]; then
-        echo "FetchLocalRPMs starting"
+        echo "FetchLocalRPMs starting" |& tee -a ${LOGFILE}
         ./scripts/rpm/fetchlocalrpms.sh ${BRANCH} |& tee -a ${LOGFILE}
-        echo "FetchLocalRPMs complete"
+        echo "FetchLocalRPMs complete" |& tee -a ${LOGFILE}
         sleep 1
 
-        echo "FetchCloudRPMs starting"
+        echo "FetchCloudRPMs starting" |& tee -a ${LOGFILE}
         ./scripts/rpm/fetchcloudrpms.sh ${BRANCH} |& tee -a ${LOGFILE}
-        echo "FetchCloudRPMs complete."
+        echo "FetchCloudRPMs complete." |& tee -a ${LOGFILE}
         sleep 1
 fi
 
-echo "BuildRPM starting..."
+echo "BuildRPM starting..." |& tee -a ${LOGFILE}
 ./scripts/rpm/buildrpm.sh ${BRANCH} |& tee -a ${LOGFILE}
-echo "BuildRPM complete."
+echo "BuildRPM complete." |& tee -a ${LOGFILE}
 sleep 1
 
 if [ ${CLOUD} = 0 ]; then
+        echo "Non cloud deployment selected." |& tee -a ${LOGFILE}
         sec_off
 
-        echo "Copy configure script to ${APPLIANCE} - Starting"
+        echo "Copy configure script to ${APPLIANCE} - Starting" |& tee -a ${LOGFILE}
         sshpass -e scp ../configure.sh root@${APPLIANCE}:/root
-        echo "Copy configure script to ${APPLIANCE} - Done"
+        echo "Copy configure script to ${APPLIANCE} - Done" |& tee -a ${LOGFILE}
         sleep 1
 
-        echo "DeployRPMs starting..."
+        echo "DeployRPMs starting..." |& tee -a ${LOGFILE}
         ./scripts/deploy/deployrpms.sh ${BRANCH} ${APPLIANCE} ${PLATFORM} |& tee -a ${LOGFILE}
-        echo "DeployRPMs complete."
+        echo "DeployRPMs complete." |& tee -a ${LOGFILE}
         sleep 1
 
         sec_off
 
-        echo "Executing configure script..."
-        sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE}
-        echo "Configure done."
+        echo "Executing configure script..." |& tee -a ${LOGFILE}
+        sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE} |& tee -a ${LOGFILE}
+        echo "Configure done." |& tee -a ${LOGFILE}
 fi
 
 if [ ${CLOUD} = 1 ]; then
+        echo "Cloud deployment selected." |& tee -a ${LOGFILE}
         if [ ${PLATFORM} = ec2 ]; then
-                echo "Platform: ${PLATFORM}"
-#                ssh root@${APPLIANCE} -- "yes | lbrestore ; yes | lbec2 ; yes | lbamiprep ; yes | lbfirstboot" |& tee -a ${LOGFILE}
+                echo "Cloud platform: ${PLATFORM}" |& tee -a ${LOGFILE}
+                # EC2 commands |& tee -a ${LOGFILE}
                 TARGET=byol
 
         elif [ ${PLATFORM} = gcp ]; then
-                echo "Platform: ${PLATFORM}"
+                echo "Cloud platform: ${PLATFORM}" |& tee -a ${LOGFILE}
                 # GCP commands |& tee -a ${LOGFILE}
+                # Options are hourly|byol suffixed with prod|support|dev
                 TARGET=byol-support
 
         elif [ ${PLATFORM} = azure ]; then
-                echo "Platform: ${PLATFORM}"
+                echo "Cloud platform: ${PLATFORM}"  |& tee -a ${LOGFILE}
                 # Azure commands |& tee -a ${LOGFILE}
                 TARGET=byol
 
         else
-                echo "Platform: \"${PLATFORM}\" not known"
+                echo "Platform: \"${PLATFORM}\" not known" |& tee -a ${LOGFILE}
         fi
         scripts/build.sh ${BRANCH} ${PLATFORM} ${TARGET} |& tee -a ${LOGFILE}
 fi
