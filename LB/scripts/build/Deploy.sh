@@ -15,8 +15,6 @@ export SSHPASS=loadbalancer
 HOSTNAME=$(hostname)
 CLOUD=0
 
-ping -c 1 ${APPLIANCE}
-
 # Check if this is a cloud deployment
 if [ "${PLATFORM}" = "aws" ] || [ "${PLATFORM}" = "amazonwebservices" ]; then
         PLATFORM=ec2
@@ -71,6 +69,7 @@ sleep 1
 
 if [ ${CLOUD} = 0 ]; then
         echo "Non cloud deployment selected." |& tee -a ${LOGFILE}
+        ping -c 1 ${APPLIANCE}
         sec_off
 
         echo "Copy configure script to ${APPLIANCE} - Starting" |& tee -a ${LOGFILE}
