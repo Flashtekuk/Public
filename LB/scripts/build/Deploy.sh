@@ -101,6 +101,7 @@ if [ ${CLOUD} = 1 ]; then
                 # GCP commands |& tee -a ${LOGFILE}
                 # Options are hourly|byol suffixed with prod|support|dev
                 TARGET=byol-support
+		export FORCE_VERSION="v8.9.1"
 
         elif [ ${PLATFORM} = azure ]; then
                 echo "Cloud platform: ${PLATFORM}"  |& tee -a ${LOGFILE}
