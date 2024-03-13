@@ -1,0 +1,10 @@
+--- old/usr/local/lib/python/syn_block.py       2024-03-08 12:43:26.153417713 +0000
++++ new/usr/local/lib/python/syn_block.py       2024-03-08 12:39:42.880381113 +0000
+@@ -175,7 +175,7 @@
+
+ # Return a list of PortRange tuples with port_count 1 obtained from parsing the
+ # output of lsof.
+-def get_listening_port_ranges(match_process_names=None, exempt_ports=None, ignore_wildcard=True):
++def get_listening_port_ranges(match_process_names=None, exempt_ports=None, ignore_wildcard=False):
+     if match_process_names is None:
+         match_process_names = []
