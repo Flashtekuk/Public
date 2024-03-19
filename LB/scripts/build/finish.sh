@@ -47,6 +47,7 @@ elif [ ${PLATFORM} = 'vultimate']; then
     PARTNER=1
 else # Default to hardware
     LIC_CMD='lbsprime'
+    HARDWARE=1
 fi
 
 grep "\$DEBUG = False\;" /var/www/html/lbadmin/inc/lbadmin_config.php
@@ -86,6 +87,11 @@ for file in /zero.dat /var/log/zero.dat; do
     echo ""
 done
 echo "Zero padding done..."
+
+if [ ${HARDWARE} = 1 ] ; then
+    echo loadbalancer | passwd root --stdin
+    lbconsoleenable
+fi
 
 yes | lbinit
 lblogclean
