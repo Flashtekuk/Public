@@ -1,3 +1,3 @@
 #!/bin/bash
 
-curl -I -i -H "Connection: Upgrade" -H "Upgrade: websocket" https://portal.loadbalancer.org/
+curl -I -i -s -H "Connection: Upgrade" -H "Upgrade: websocket" https://portal.loadbalancer.org/
