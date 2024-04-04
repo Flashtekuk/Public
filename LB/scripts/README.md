@@ -9,4 +9,6 @@ cipherscan.sh - Bash script to check which ciphers are available on a target sys
 
 haproxy-nossl.sh - Bash script to remove the 'server-cipher' lines from haproxy.cfg for v8.9.1.
 
+portal-check.sh - Bash script to perform a basic check of Loadbalancer portal access.
+
 set_phy_adv.sh - Script to set the 'Physical - Advanced Configuration' page settings.
