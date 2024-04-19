@@ -2,13 +2,13 @@
 
 ###############################################################################
 #                                                                             #
-# lb-checkcert.sh - Simple script to check SSL certificates for validity      #
+# certtest.sh - Simple script to check SSL certificates for validity          #
 #                                                                             #
 # (C) 2019 Loadbalancer.org                                                   #
 #                                                                             #
 # Will accept file names at the CLI, or will scan certs path and check those  #
 #                                                                             #
-# v1.0 - 2019-03-28 - Neil Stone <support@loadbalalcer.org>                   #
+# v1.1 - 2024-04-19 - Neil Stone <support@loadbalancer.org>                   #
 #                                                                             #
 #                                                                             #
 ###############################################################################
@@ -108,8 +108,8 @@ for cert in ${CERTS}; do
 #        options = NO_TLSv1.1
 #        options = CIPHER_SERVER_PREFERENCE
 #        options = DONT_INSERT_EMPTY_FRAGMENTS
-#        renegotiation = no 
-#        local = 127.6.6.6     
+#        renegotiation = no
+#        local = 127.6.6.6
 #        TIMEOUTclose = 0
 #EOF
 #        stunnelstate=0
