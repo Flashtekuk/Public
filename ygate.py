@@ -1,4 +1,4 @@
-#!/usr/bin/python  -u
+#!/usr/bin/python3  -u
 #
 #
 #  ygate - Yaesu igate                       General Public License v2
