@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ ${#} -ne 3 ]; then
-        echo "Usage: ${0} IP branch platform"
+if [ ${#} -lt 1 ]; then
+        echo "Usage: ${0} IP [branch] [platform]"
         exit 3
 fi
 
@@ -9,8 +9,18 @@ LOGDIR=${HOME}/buildlogs
 mkdir -p ${LOGDIR}
 LOGFILE=${LOGDIR}/$(date +%s).log
 APPLIANCE=${1}
-BRANCH=${2}
-PLATFORM=${3}
+#BRANCH=${2}
+BRANCH=${2:-$(git symbolic-ref --short HEAD)}
+#PLATFORM=${3}
+PLATFORM=${3:-vmware}
+
+function lb_offline () {
+	echo "Appliance not online"
+	exit 3
+}
+
+ping -c 1 ${APPLIANCE} || lb_offline
+
 export SSHPASS=loadbalancer
 HOSTNAME=$(hostname)
 CLOUD=0
