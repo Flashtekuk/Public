@@ -13,6 +13,7 @@ APPLIANCE=${1}
 BRANCH=${2:-$(git symbolic-ref --short HEAD)}
 #PLATFORM=${3}
 PLATFORM=${3:-vmware}
+SSH_KEY=$(ls ${HOME}/.ssh/*.pub -1|head -1)
 
 function lb_offline () {
 	echo "Appliance not online"
@@ -51,7 +52,7 @@ function sec_off () {
         curl -u loadbalancer:loadbalancer -X POST \
                 --form hostname="${HOSTNAME}" \
                 --form username="root" \
-                --form public_key=@"${HOME}/.ssh/id_ecdsa.pub" \
+                --form public_key=@"${SSH_KEY}" \
                 --insecure "https://${APPLIANCE}:9443/lbadmin/config/security.php?action=upload_pub_user" -o /dev/null --silent
         echo "Security adjustments completed..."
 }
