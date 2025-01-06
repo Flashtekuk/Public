@@ -5,6 +5,14 @@ if [ ${#} -lt 1 ]; then
         exit 3
 fi
 
+# Checking if we're run from within a git repo...
+git status > /dev/null
+EC=${?}
+if [ ${EC} -ne 0 ]; then
+	echo "${0} not executed from git repo ( ${HOME}/git/lb_dev_v2 ) or repo inconsistent - State: ${EC}"
+	exit ${EC}
+fi
+
 LOGDIR=${HOME}/buildlogs
 mkdir -p ${LOGDIR}
 LOGFILE=${LOGDIR}/$(date +%s).log
@@ -17,7 +25,7 @@ SSH_KEY=$(ls ${HOME}/.ssh/*.pub -1|head -1)
 
 function lb_offline () {
 	echo "Appliance not online"
-	exit 3
+	exit 4
 }
 
 ping -c 1 ${APPLIANCE} || lb_offline
