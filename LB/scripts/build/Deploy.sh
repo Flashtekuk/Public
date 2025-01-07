@@ -1,7 +1,20 @@
 #!/bin/bash
 
+if [  ]; then
+	echo ""
+	echo ""
+	echo "Do not run this script as root user"
+	echo ""
+	echo ""
+	exit 2
+fi
+
 if [ ${#} -lt 1 ]; then
+	echo ""
+	echo ""
         echo "Usage: ${0} IP [branch] [platform]"
+	echo ""
+	echo ""
         exit 3
 fi
 
@@ -9,7 +22,11 @@ fi
 git status > /dev/null
 EC=${?}
 if [ ${EC} -ne 0 ]; then
+	echo ""
+	echo ""
 	echo "${0} not executed from git repo ( ${HOME}/git/lb_dev_v2 ) or repo inconsistent - State: ${EC}"
+	echo ""
+	echo ""
 	exit ${EC}
 fi
 
@@ -24,7 +41,11 @@ PLATFORM=${3:-vmware}
 SSH_KEY=$(ls ${HOME}/.ssh/*.pub -1|head -1)
 
 function lb_offline () {
+	echo ""
+	echo ""
 	echo "Appliance not online"
+	echo ""
+	echo ""
 	exit 4
 }
 
