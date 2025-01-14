@@ -9,6 +9,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 #  v0.2 - 2023-07-27 - Added basic check for port contactability, renamed a few vaiables - Neil Stone <support@loadbalancer.org>
 #  v0.3 - 2023-07-28 - Added support for check support from haproxy.cfg - Neil Stone <support@loadbalancer.org>
 #  v0.4 - 2023-07-28 - Relocated a lost 'done' - Neil Stone <support@loadbalancer.org>
+#  v0.5 - 2025-01-14 - Made echo statement look prettier (thanks Harry) - Neil Stone <support@loadbalancer.org>
 #
 ######################
 
@@ -29,7 +30,7 @@ fi
 
 for OPENSSL in /usr/local/bin/openssl /usr/bin/openssl; do
     echo "#################################"
-    echo "Scanning - ${SERVER}:${PORT}" with ${OPENSSL}
+    echo "Scanning - ${SERVER}:${PORT} with ${OPENSSL}"
     echo "#################################"
     for VER in ssl2 ssl3 tls1 tls1_1 tls1_2; do
         for CIPHER in $(${OPENSSL} ciphers 'ALL:eNULL' | tr ':' ' '); do
