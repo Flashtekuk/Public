@@ -1,5 +1,8 @@
 #!/bin/bash
 
+GATEWAY=$(ip route|awk /default/{'print $3'})
+DNS1=10.0.98.60
+
 if [  ]; then
 	echo ""
 	echo ""
@@ -125,7 +128,7 @@ if [ ${CLOUD} = 0 ]; then
         sec_off
 
         echo "Executing configure script..." |& tee -a ${LOGFILE}
-        sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE} |& tee -a ${LOGFILE}
+        sshpass -e ssh -t ${APPLIANCE} -- screen /root/configure.sh ${APPLIANCE} ${GATEWAY} ${DNS1} |& tee -a ${LOGFILE}
         echo "Configure done." |& tee -a ${LOGFILE}
 fi
 
