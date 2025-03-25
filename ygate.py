@@ -33,7 +33,7 @@ PASS = "16307"
 LAT  = "50.793429N"
 LONG = "1.133729W"
 #SERIAL_PORT = 'COM9' # Windows
-SERIAL_PORT = '/dev/ttyUSB0' # Linux
+SERIAL_PORT = '/dev/ttyUSB1' # Linux
 
 # APRS-IS specific constants
 HOST = "rotate.aprs2.net"  # north america tier2 servers round robin
