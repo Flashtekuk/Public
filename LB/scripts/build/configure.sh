@@ -15,7 +15,7 @@ else
 	yes | lbrestore
 	lbfirstboot
 	lb_net_setup.php ${IP}/24 ${GW} ${DNS}
-	ip a a ${IP}/18 dev eth0
+	ip a a ${IP}/24 dev eth0
 	htpasswd -b /etc/loadbalancer.org/passwords loadbalancer loadbalancer
 	lbconsoleenable
 	reboot
