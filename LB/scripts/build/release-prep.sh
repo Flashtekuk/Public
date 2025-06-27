@@ -33,7 +33,7 @@ fi
    rm -rf /tmp/*
 
 #Make sure Debug is False in /var/www/html/lbadmin/inc/lbadmin_config.*
-   grep \$DEBUG /var/www/html/lbadmin/inc/lbadmin_config.php | grep False || echo "DEBUG set, exiting" ; exit 69
+   grep \$DEBUG /var/www/html/lbadmin/inc/lbadmin_config.php | grep False || 'echo "DEBUG set, exiting" ; exit 69'
 
 #Remove any local XML and firewall script backup files
    rm -f /etc/loadbalancer.org/lb_config.xml.{old,slave}
@@ -56,7 +56,7 @@ fi
    yes | lbrestore
 
 # Zero padding
-for dir in /root/zero.dat /var/log/zero.dat; do
+for file in /root/zero.dat /var/log/zero.dat; do
    echo “Starting ${file}” && \
    dd if=/dev/zero of=${file} bs=1M ; sync && sleep 1 && sync && \
    echo “Removing ${file}” && \
@@ -72,4 +72,4 @@ lblogclean
 echo "Next, run:- history -c ; lbcleanboot"
 
 # Commit suicide
-rm -fv ${0}
+#rm -fv ${0}
