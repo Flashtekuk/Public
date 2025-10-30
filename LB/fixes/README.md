@@ -8,3 +8,5 @@ fork-fix.sh - Script to address issue where XML differs from ldirectord.cf due t
 hyperv-nic-rename.sh - Script to address the Hyper-V NIC rename bug
 
 synblock.patch - Used to invert the logic of the iptables synblock in v8.11.0 and v8.11.1
+
+00-buffers.conf - Increase the buffers available to stunnel - ENT-817
