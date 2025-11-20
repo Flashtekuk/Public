@@ -17,6 +17,8 @@ haproxy-certs.sh - Bash script to create a single directory of symlinks for hapr
 
 management_gw_xml.sh - Bash script to append required XML entried for management_gateway to XML.
 
+max-buffers.sh - Bash script to set maximum buffer sizes on ethernet interfaces.
+
 portal-check.sh - Bash script to perform a basic check of Loadbalancer portal access.
 
 set_phy_adv.sh - Script to set the 'Physical - Advanced Configuration' page settings.
