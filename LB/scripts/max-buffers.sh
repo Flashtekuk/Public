@@ -8,8 +8,8 @@
 #
 ######
 
-if [ $# -ne 1 ] ; then
-    echo "Usage: $0 ethX"
+if [ ${#} -ne 1 ] ; then
+    echo "Usage: ${0} ethX"
     exit 3
 fi
 
