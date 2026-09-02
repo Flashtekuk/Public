@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GATEWAY=$(ip route|awk /default/{'print $3'})
-DNS1=10.0.98.60
+DNS1="10.0.98.60 10.100.98.10"
 
 if [  ]; then
 	echo ""
