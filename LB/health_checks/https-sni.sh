@@ -5,7 +5,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #
 # Script to check https RIPs using SNI
 #
-# (c) Loadbalancer.org 2020
+# (c) Loadbalancer.org 2026
 #
 # 2018-08-24 - Initial write - Neil Stone <support@loadbalancer.org>
 # 2018-08-30 - Added PATH statement - Neil Stone <support@loadbalancer.org>
@@ -14,17 +14,18 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 # 2020-03-17 - Included real server port in curl request - Neil Stone <support@loadbalancer.org>
 # 2020-06-15 - Included support for --max-time as a variable - Neil Stone <support@loadbalancer.org>
 # 2022-04-12 - Updated path statement to handle upgrade to v8.6+ - Neil Stone <support@loadbalancer.org>
+# 2026-09-18 - Updated CHECK_HOST to account for HAProxy's variable setting capability - Neil Stone <support@loadbalancer.org>
 #
 #############################################################
 
 # CHECK_HOST is the FQDN for the hostname (not protocol)
-CHECK_HOST="https.site.address"
+CHECK_HOST=${HAPROXY_SERVER_NAME}
 
-# CHECK_PATH is the path to GETto run the test against
-CHECK_PATH="LoadbalancerStatus.php"
+# CHECK_PATH is the path to GET to run the test against
+CHECK_PATH="/"
 
 # CHECK_STRING is the string to detect for upon success, should be returned early in the result of the GET
-CHECK_STRING="Success"
+CHECK_STRING="OK"
 
 # CHECK_TIME is the number of seconds the cURL command is allowed to run before exiting. (Exit state 28)
 CHECK_TIME="2"
