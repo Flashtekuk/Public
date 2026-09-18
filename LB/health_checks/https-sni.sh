@@ -25,7 +25,7 @@ CHECK_HOST=${HAPROXY_SERVER_NAME}
 CHECK_PATH="/"
 
 # CHECK_STRING is the string to detect for upon success, should be returned early in the result of the GET
-CHECK_STRING="OK"
+CHECK_STRING="200 OK"
 
 # CHECK_TIME is the number of seconds the cURL command is allowed to run before exiting. (Exit state 28)
 CHECK_TIME="2"
@@ -56,10 +56,10 @@ else
 fi
 
 # Build curl options variable
-CURL_OPTS="--resolve ${CHECK_HOST}:${CHECK_PORT}:${CHECK_IP}"
+CURL_OPTS="--resolve ${CHECK_HOST}:${CHECK_PORT}:${CHECK_IP} --verbose"
 
 # Run curl with appropriate options
-curl ${CURL_OPTS} --header 'Host: '${CHECK_HOST}'' --max-time ${CHECK_TIME} --insecure https://${CHECK_HOST}:${CHECK_PORT}/${CHECK_PATH} 2>/dev/null | grep -q "${CHECK_STRING}"
+curl ${CURL_OPTS} --header 'Host: '${CHECK_HOST}'' --max-time ${CHECK_TIME} --insecure https://${CHECK_HOST}:${CHECK_PORT}${CHECK_PATH} 2>&1 | grep -q "${CHECK_STRING}"
 
 EXIT_STATE=${?}
 
